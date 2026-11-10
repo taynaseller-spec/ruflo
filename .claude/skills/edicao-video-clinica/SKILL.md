@@ -105,6 +105,29 @@ todos.
 - Envie o vídeo com `SendUserFile` + a imagem de verificação. Avise que o arquivo é grande demais
   para subir pelo conector do Drive.
 
+## 4b. Corte de vídeo bruto + luz + velocidade (pedido de 2026-11-10)
+
+Quando a usuária pedir "corta o bruto, melhora a luz e acelera": entregar **só isso** (sem
+legenda, B-roll, título ou efeitos, a menos que peça).
+- **Cortes:** transcreva (whisper) + `silencedetect n=-38dB d=0.25`. Remova silêncios, mantendo
+  0,08 s antes e 0,14 s depois da fala; **junte trechos separados por pausas < 0,35 s** (evita
+  micro-pulos na imagem); descarte respirações/ruídos soltos.
+- **Repetições:** quando uma fala é gravada várias vezes, fique com a **última tomada completa**.
+- **Ordem:** se um item foi gravado fora de lugar (ex.: depois do CTA), mova-o para o lugar
+  lógico (antes da conclusão) e **avise** a usuária na entrega.
+- Sem punch-in/zoom nos cortes (regra de zoom da seção 2); pequeno fade de áudio de 12–15 ms em
+  cada corte para não estalar.
+- **Luz:** compare 3 correções lado a lado no rosto e meça `signalstats YAVG` do rosto. Aprovada
+  em gravação contra janela clara: `hqdn3d=1.5:1.5:3:3,curves=master='0/0.01 0.15/0.23 0.4/0.55
+  0.7/0.81 1/0.96',colorbalance=rm=0.03:bm=-0.03:rh=-0.01:bh=0.01,eq=saturation=1.08:contrast=1.02`
+  (rosto 79→104, fundo sem estourar). Não clarear a ponto de lavar o fundo.
+- **Velocidade:** `setpts=PTS/1.2` + `atempo=1.2` (voz sem efeito de esquilo).
+- **Áudio:** loudnorm + ajuste de ganho e limiter até medir ≈ -14 LUFS (o loudnorm de uma
+  passada ficou em -16).
+- **Verificação:** transcreva o resultado para confirmar que nenhuma palavra foi cortada no início
+  ou no fim de um trecho ("Compartilha" virou "Partilha" com o corte 0,15 s tarde → abrir o corte
+  no fim do silêncio anterior). Envie também a imagem antes/depois.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
