@@ -1,0 +1,154 @@
+{
+ "end": 59.6,
+ "presenter_shift": 470,
+ "title_lines": [
+  "NATURAL OU NÃO?",
+  "O QUE EXISTE POR TRÁS",
+  "DE UM ROSTO NATURAL"
+ ],
+ "title_end": 6.25,
+ "name_card": {
+  "name": "Dra. Cíntia",
+  "role": "HARMONIZAÇÃO FACIAL",
+  "start": 47.4,
+  "end": 52.6
+ },
+ "keep_case": [
+  "Cíntia"
+ ],
+ "plan": [
+  [
+   0.0,
+   3.05,
+   "split",
+   "br/b3.mp4",
+   11.65
+  ],
+  [
+   3.05,
+   6.3,
+   "split",
+   "br/b1.mp4",
+   89.0
+  ],
+  [
+   6.3,
+   8.0,
+   "talk",
+   null,
+   0
+  ],
+  [
+   8.0,
+   10.0,
+   "full",
+   "br/b1.mp4",
+   40.0
+  ],
+  [
+   10.0,
+   13.0,
+   "talk",
+   null,
+   0
+  ],
+  [
+   13.0,
+   15.6,
+   "split",
+   "br/b3.mp4",
+   2.6
+  ],
+  [
+   15.6,
+   18.0,
+   "talk",
+   null,
+   0
+  ],
+  [
+   18.0,
+   20.4,
+   "full",
+   "br/b1.mp4",
+   26.0
+  ],
+  [
+   20.4,
+   24.8,
+   "talk",
+   null,
+   0
+  ],
+  [
+   24.8,
+   26.75,
+   "split",
+   "br/b1.mp4",
+   106.0
+  ],
+  [
+   26.75,
+   28.4,
+   "talk",
+   null,
+   0
+  ],
+  [
+   28.4,
+   30.8,
+   "full",
+   "br/b1.mp4",
+   81.0
+  ],
+  [
+   30.8,
+   35.2,
+   "talk",
+   null,
+   0
+  ],
+  [
+   35.2,
+   37.8,
+   "full",
+   "br/b4.mp4",
+   7.0
+  ],
+  [
+   37.8,
+   41.6,
+   "talk",
+   null,
+   0
+  ],
+  [
+   41.6,
+   43.35,
+   "split",
+   "br/b2.mp4",
+   8.67
+  ],
+  [
+   43.35,
+   45.0,
+   "talk",
+   null,
+   0
+  ],
+  [
+   45.0,
+   47.15,
+   "full",
+   "br/b1.mp4",
+   85.0
+  ],
+  [
+   47.15,
+   59.6,
+   "talk",
+   null,
+   0
+  ]
+ ]
+}
