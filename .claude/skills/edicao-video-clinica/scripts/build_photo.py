@@ -4,7 +4,7 @@ import json, subprocess, os, sys
 SFXPY=os.path.join(os.path.dirname(os.path.abspath(__file__)),'sfx.py')
 W=sys.argv[1]; os.chdir(W); ONLY=sys.argv[2] if len(sys.argv)>2 else 'all'
 P=json.load(open('project.json')); END=P['end']; SH=P['presenter_shift']
-FPS=30; BH=960; FEATH=300; CLEAN=BH-FEATH; TI=0.38; TO=0.32; DRIFT=0.03
+FPS=30; BH=960; FEATH=300; CLEAN=BH-FEATH; TI=0.38; TO=0.18; DRIFT=0.03
 fr=lambda t: round(t*FPS)
 plan=[tuple(x) for x in P['plan']]
 os.makedirs('seg',exist_ok=True); os.makedirs('pan',exist_ok=True)

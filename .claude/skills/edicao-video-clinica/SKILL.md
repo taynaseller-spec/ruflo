@@ -84,7 +84,11 @@ todos.
 **Transições** (todas com tempo fixo, sem alterar a sincronia com o áudio):
 - Entrada `talk→split`: apresentadora desliza para baixo (easeOutCubic 0,38 s) enquanto o B-roll
   entra com **focus pull** (desfocado → nítido) + fade de alfa. Saída `split→talk`: o inverso
-  (smoothstep 0,32 s), emendando perfeitamente no quadro seguinte.
+  (smoothstep **0,18 s** — ver aprendizado #7), emendando perfeitamente no quadro seguinte.
+  **A meia tela sai quando a voz termina a frase**: o fim do trecho `split` fica no início do
+  silêncio real (silencedetect -33 dB, d=0,12) + 0,06 s, nunca no início da frase seguinte.
+  Não use o fim de palavra do whisper (ele estica até a próxima palavra) e não confunda pausa no
+  meio da frase com fim de frase.
 - `split→split`: crossfade só do painel de cima, com foco; apresentadora parada.
 - `full`: dissolve com desfoque (0,30 s entrada, 0,28 s saída) sobre o vídeo da apresentadora.
 
@@ -176,6 +180,7 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
 | 4 | 2026-11-10 | Pedido inicial: "não exagera nas transições nem nos zooms, vídeo bem clean". Depois: "transições e efeitos sonoros bem sofisticados". | Sofisticado = suave e discreto (focus pull, deslize, dissolve com desfoque, whoosh de ar), nunca chamativo. Zoom máximo 3% só em `full`. |
 | 5 | 2026-11-11 | Num vídeo novo (consórcio/imóveis), perguntei se ela ia mandar B-roll ou se eu usava os da pasta, citando os clipes da Millie Bobby Brown do projeto anterior. Ela respondeu irritada: "não tem nada a ver com Millie Bobby Brown" e mandou o roteiro. | B-roll precisa casar com o roteiro do vídeo atual. Material de projeto anterior nunca é opção. Sem B-roll do tema, eu mesmo busco imagens adequadas (seção 4c) e entrego, sem fazer perguntas desnecessárias. |
 | 6 | 2026-11-11 | No vídeo de consórcio ela não gostou das fotos do Commons (muitas fracas: fachada gasta, sala escura, calculadora pequena) e pediu "efeitos sonoros e transições", que já existiam mas estavam discretos demais para ela perceber. | Prefira gráficos animados sincronizados com a fala às fotos fracas; use só fotos fortes (arquitetura moderna, chaves, sala clara). Efeitos mais presentes para esse estilo: whoosh -10, suave -13, saída -18, impacto -11, mais um **pop** (-19) a cada elemento gráfico que aparece. Medido: whoosh ~13 dB abaixo da voz. |
+| 7 | 2026-11-11 | "Arruma os atrasos na hora que a meia tela sai": o B-roll ficava na tela até o começo da frase seguinte e saía em 0,32 s, o que dava sensação de atraso (não havia quadro congelado; conferi com YDIF). | Saída em 0,18 s, terminando no fim real da voz (detectado na forma de onda). Vale para `build.py` e `build_photo.py`. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 

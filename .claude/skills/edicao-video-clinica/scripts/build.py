@@ -28,7 +28,7 @@ def split_crop(clip,a,b):
 
 os.makedirs('seg',exist_ok=True)
 enc=['-c:v','libx264','-preset','medium','-crf','17','-pix_fmt','yuv420p','-r',str(FPS),'-an']
-TI=0.38; TO=0.32
+TI=0.38; TO=0.18
 def panel(idx,clip,a,d,tag):
     s,Ws,Hs,x,y,_=split_crop(clip,a,a+d)
     return f"[{idx}:v]fps=30,setpts=PTS-STARTPTS,scale={Ws}:{Hs}:flags=lanczos,crop=1080:{BH}:{x}:{y},setsar=1,format=yuv420p[{tag}]"
