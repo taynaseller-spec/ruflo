@@ -14,82 +14,65 @@
    3.42,
    6.45,
    "split",
-   "br/p_calc.jpg",
-   0.5,
-   0.55
+   "gfx/g_juros.mp4",
+   0,
+   0
   ],
   [
    6.45,
-   12.85,
+   9.75,
    "talk",
    null,
+   0,
+   0
+  ],
+  [
+   9.75,
+   12.85,
+   "split",
+   "gfx/g_parcela.mp4",
    0,
    0
   ],
   [
    12.85,
    16.0,
-   "split",
-   "br/p_aluga.jpg",
-   0.5,
-   0.585,
-   1.35
+   "talk",
+   null,
+   0,
+   0
   ],
   [
    16.0,
-   18.3,
-   "split",
-   "br/p_mudanca.jpg",
-   0.45,
-   0.36
-  ],
-  [
-   18.3,
    20.55,
    "split",
-   "br/p_caminhao.jpg",
-   0.5,
-   0.55
+   "gfx/g_motivos.mp4",
+   0,
+   0
   ],
   [
    20.55,
-   24.1,
+   26.08,
+   "split",
+   "gfx/g_demanda.mp4",
+   0,
+   0
+  ],
+  [
+   26.08,
+   28.9,
    "talk",
    null,
    0,
    0
   ],
   [
-   24.1,
-   26.08,
-   "split",
-   "br/p_unidades.jpg",
-   0.5,
-   0.5
-  ],
-  [
-   26.08,
    28.9,
-   "split",
-   "br/p_ceu.jpg",
-   0.47,
-   0.5
-  ],
-  [
-   28.9,
-   34.1,
-   "talk",
-   null,
-   0,
-   0
-  ],
-  [
-   34.1,
    37.7,
    "split",
-   "br/p_laptop.jpg",
-   0.5,
-   0.55
+   "gfx/g_consorcio.mp4",
+   0,
+   0
   ],
   [
    37.7,
@@ -117,11 +100,149 @@
   ],
   [
    49.05,
+   50.5,
+   "talk",
+   null,
+   0,
+   0
+  ],
+  [
+   50.5,
+   53.8,
+   "split",
+   "gfx/g_cta.mp4",
+   0,
+   0
+  ],
+  [
+   53.8,
    55.6,
    "talk",
    null,
    0,
    0
   ]
+ ],
+ "extra_sfx": [
+  {
+   "t": 3.5,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 0
+  },
+  {
+   "t": 4.87,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 1
+  },
+  {
+   "t": 9.9,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 2
+  },
+  {
+   "t": 10.45,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 3
+  },
+  {
+   "t": 11.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 4
+  },
+  {
+   "t": 16.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 5
+  },
+  {
+   "t": 17.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 6
+  },
+  {
+   "t": 18.05,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 7
+  },
+  {
+   "t": 19.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 8
+  },
+  {
+   "t": 20.95,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 9
+  },
+  {
+   "t": 23.45,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 10
+  },
+  {
+   "t": 24.05,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 11
+  },
+  {
+   "t": 29.7,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 12
+  },
+  {
+   "t": 32.5,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 13
+  },
+  {
+   "t": 32.85,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 14
+  },
+  {
+   "t": 35.6,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 15
+  },
+  {
+   "t": 36.95,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 16
+  },
+  {
+   "t": 50.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 17
+  },
+  {
+   "t": 51.4,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 18
+  },
+  {
+   "t": 52.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 19
+  }
  ]
 }

@@ -25,11 +25,12 @@ def panel_clip(i,photo,fx,fy,D,zoom=1.0):
         f"zoompan=z='1+{DRIFT}*on/{n}':x='{ax:.4f}*iw-{ax:.4f}*iw/zoom':y='{ay:.4f}*ih-{ay:.4f}*ih/zoom':d={n}:s=1080x{BH}:fps={FPS},setsar=1,format=yuv420p")
     subprocess.run(['ffmpeg','-v','error','-y','-i',photo,'-vf',vf,'-frames:v',str(n)]+enc+[out],check=True)
     return out
-lst=[]; sfx=[{'t':0.0,'kind':'thump','gain':-13}]
+lst=[]; sfx=[{'t':0.0,'kind':'thump','gain':-11}]+P.get('extra_sfx',[])
 panels={}
 for i,it in enumerate(plan):
     if it[2]=='split':
         D=(fr(it[1])-fr(it[0]))/FPS
+        if it[3].endswith('.mp4'): panels[i]=it[3]; continue          # pre-rendered animated graphic
         panels[i]=f'pan/{i:02d}.mp4' if (ONLY not in('all',) and os.path.exists(f'pan/{i:02d}.mp4') and str(i) not in ONLY.split(',')) else panel_clip(i,it[3],it[4],it[5],D,*(it[6:7]))
 for i,it in enumerate(plan):
     s0,e0,mode=it[:3]; n=fr(e0)-fr(s0); ss=fr(s0)/FPS; D=n/FPS; out=f'seg/{i:02d}.mp4'; lst.append(out)
@@ -38,9 +39,9 @@ for i,it in enumerate(plan):
         cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-frames:v',str(n),'-vf','scale=1080:1920,setsar=1,fps=30']+enc+[out]
     else:
         ein_talk=not(prev and prev[2]=='split'); eout_talk=not(nxt and nxt[2]=='split')
-        if ein_talk: sfx.append({'t':s0-0.30,'kind':'whoosh','gain':-14,'seed':i+40})
-        else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':-17,'seed':i+80})
-        if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':-22,'seed':i+120})
+        if ein_talk: sfx.append({'t':s0-0.30,'kind':'whoosh','gain':-10,'seed':i+40})
+        else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':-13,'seed':i+80})
+        if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':-18,'seed':i+120})
         ein=f"(1-pow(1-clip(t/{TI},0,1),3))" if ein_talk else "1"
         sx=f"clip((t-{D-TO:.3f})/{TO},0,1)"; eout=f"(1-{sx}*{sx}*(3-2*{sx}))" if eout_talk else "1"
         K=f"min(clip(T/{TI},0,1),{f'clip(({D:.3f}-T)/{TO},0,1)' if eout_talk else '1'})"

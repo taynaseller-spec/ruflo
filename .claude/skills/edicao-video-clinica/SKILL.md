@@ -149,6 +149,20 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
 - **"Meia tela somente"** = só os modos `split` + `talk`: sem B-roll em tela cheia. Se ela pedir
   "sem legenda e sem título", tire também o brilho de abertura e o cartão de nome; mantenha as
   transições, os whooshes e o impacto suave.
+- **Gráficos animados originais** (`scripts/graphics.py`): quando faltar imagem boa do tema, use
+  painéis 1080x960 em azul-marinho com dourado, branco e vermelho/verde, fonte Inter, conteúdo
+  só na área limpa (y<640) e elementos que entram **sincronizados com a palavra** (pegue o tempo
+  em `words.json`). Modelos prontos: gráfico de juros subindo, renda × parcela estourando o limite,
+  lista de motivos, barras de procura/oferta/aluguel, cards financiamento × consórcio (com
+  "JUROS" riscado e "SEM JUROS"), balão de comentário com a palavra do CTA. Desenhe novos no
+  mesmo estilo. No `plan`, o painel entra como `gfx/g_<nome>.mp4`. Gere uma prévia estática
+  antes de renderizar.
+- Mixkit até libera o host, mas devolve 429 (anti-robô). **Não tente contornar.** Pexels e
+  Pixabay ficam bloqueados. Se a usuária puder, peça que ela baixe vídeos no Pexels ou Mixkit e
+  salve na pasta Imagens; se não puder, use gráficos + as melhores fotos.
+- Ritmo: não deixe o apresentador mais de ~10 s seguidos na meia tela. Frases de impacto
+  ("isso é uma grande oportunidade", "o juro não entra no consórcio") ficam com o rosto em tela
+  cheia.
 - `presenter_shift` é calculado para cada apresentador: topo da cabeça ≈ 840 px na meia tela
   (foi 470 para a Dra. Cíntia e 230 para o consultor).
 
@@ -161,6 +175,7 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
 | 3 | 2026-11-10 | Primeira mixagem dos efeitos ficou ~23 dB abaixo da voz (inaudível no celular). | Efeitos ~16 dB abaixo da voz; medir antes de entregar. (Seção 4) |
 | 4 | 2026-11-10 | Pedido inicial: "não exagera nas transições nem nos zooms, vídeo bem clean". Depois: "transições e efeitos sonoros bem sofisticados". | Sofisticado = suave e discreto (focus pull, deslize, dissolve com desfoque, whoosh de ar), nunca chamativo. Zoom máximo 3% só em `full`. |
 | 5 | 2026-11-11 | Num vídeo novo (consórcio/imóveis), perguntei se ela ia mandar B-roll ou se eu usava os da pasta, citando os clipes da Millie Bobby Brown do projeto anterior. Ela respondeu irritada: "não tem nada a ver com Millie Bobby Brown" e mandou o roteiro. | B-roll precisa casar com o roteiro do vídeo atual. Material de projeto anterior nunca é opção. Sem B-roll do tema, eu mesmo busco imagens adequadas (seção 4c) e entrego, sem fazer perguntas desnecessárias. |
+| 6 | 2026-11-11 | No vídeo de consórcio ela não gostou das fotos do Commons (muitas fracas: fachada gasta, sala escura, calculadora pequena) e pediu "efeitos sonoros e transições", que já existiam mas estavam discretos demais para ela perceber. | Prefira gráficos animados sincronizados com a fala às fotos fracas; use só fotos fortes (arquitetura moderna, chaves, sala clara). Efeitos mais presentes para esse estilo: whoosh -10, suave -13, saída -18, impacto -11, mais um **pop** (-19) a cada elemento gráfico que aparece. Medido: whoosh ~13 dB abaixo da voz. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
