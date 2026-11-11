@@ -1,6 +1,6 @@
 ---
 name: edicao-video-clinica
-description: "Padrão de edição de Reels/TikTok verticais para a clínica de estética (meia tela com máscara suave, B-roll, legenda palavra a palavra, transições e efeitos sonoros sofisticados). Use SEMPRE que a usuária pedir para editar, cortar, legendar, enquadrar ou finalizar um vídeo, analisar vídeos de referência, ou mexer em B-roll/meia tela/transições/efeitos sonoros. Contém as preferências aprovadas, o registro de erros corrigidos e o pipeline (scripts) que gerou a versão aprovada."
+description: "Padrão de edição de Reels/TikTok verticais (clínica de estética e outros clientes, ex.: consórcio/imóveis) (meia tela com máscara suave, B-roll, legenda palavra a palavra, transições e efeitos sonoros sofisticados). Use SEMPRE que a usuária pedir para editar, cortar, legendar, enquadrar ou finalizar um vídeo, analisar vídeos de referência, ou mexer em B-roll/meia tela/transições/efeitos sonoros. Contém as preferências aprovadas, o registro de erros corrigidos e o pipeline (scripts) que gerou a versão aprovada."
 ---
 
 # Padrão de edição — Reels da clínica de estética
@@ -128,6 +128,30 @@ legenda, B-roll, título ou efeitos, a menos que peça).
   ou no fim de um trecho ("Compartilha" virou "Partilha" com o corte 0,15 s tarde → abrir o corte
   no fim do silêncio anterior). Envie também a imagem antes/depois.
 
+## 4c. Vídeos de outros clientes / sem B-roll fornecido (2026-11-11)
+
+O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de consórcio/imóveis).
+- **Nunca reaproveite B-roll de outro projeto.** Os clipes que estão na pasta `Imagens` podem ser
+  de um vídeo anterior. Se o tema não bate, não use e não pergunte se pode usar.
+- **Sem B-roll do tema → busque você mesmo**, antes de perguntar. Neste ambiente só o
+  **Wikimedia Commons** é acessível (Pexels, Pixabay, Mixkit, Coverr etc. são bloqueados).
+  Os vídeos de lá raramente servem; use **fotos**, de preferência as que vieram do Unsplash ou do
+  Pexels (busque "<tema> Unsplash"). Use `scripts/commons.py` para buscar e `scripts/dl.py` para
+  baixar (com retry para erro 429). Thumbs só em larguras padrão (**960/1280/1920**; 2560 falha), e
+  o host é upload.wikimedia.org (thumb.wikimedia.org é bloqueado). Prefira CC0/domínio público.
+  Se usar CC BY ou BY-SA, passe os créditos à usuária para colocar na legenda do post.
+- Monte uma folha de candidatas, escolha **por fala do roteiro** e prefira material do Brasil
+  quando houver (ex.: placa "ALUGA-SE").
+- **Foto em meia tela** (`scripts/build_photo.py`): escala mínima para cobrir, ponto focal
+  (`fx,fy`) no meio da área limpa, deriva lenta de 3% ancorada no foco (para não ficar parada),
+  `zoom` extra por foto só quando melhora a composição (ex.: céu demais acima da placa).
+  As regras de respiro e de rosto da seção 3 também valem para fotos.
+- **"Meia tela somente"** = só os modos `split` + `talk`: sem B-roll em tela cheia. Se ela pedir
+  "sem legenda e sem título", tire também o brilho de abertura e o cartão de nome; mantenha as
+  transições, os whooshes e o impacto suave.
+- `presenter_shift` é calculado para cada apresentador: topo da cabeça ≈ 840 px na meia tela
+  (foi 470 para a Dra. Cíntia e 230 para o consultor).
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -136,6 +160,7 @@ legenda, B-roll, título ou efeitos, a menos que peça).
 | 2 | 2026-11-10 | Na V1, a legenda saiu no centro da tela (sobre cabelo/testa) e o B-roll de meia tela cobria o rosto da apresentadora até ela ser deslocada. | Legenda sempre no peito/abaixo do queixo, por modo; apresentadora desce na meia tela. (Seção 2) |
 | 3 | 2026-11-10 | Primeira mixagem dos efeitos ficou ~23 dB abaixo da voz (inaudível no celular). | Efeitos ~16 dB abaixo da voz; medir antes de entregar. (Seção 4) |
 | 4 | 2026-11-10 | Pedido inicial: "não exagera nas transições nem nos zooms, vídeo bem clean". Depois: "transições e efeitos sonoros bem sofisticados". | Sofisticado = suave e discreto (focus pull, deslize, dissolve com desfoque, whoosh de ar), nunca chamativo. Zoom máximo 3% só em `full`. |
+| 5 | 2026-11-11 | Num vídeo novo (consórcio/imóveis), perguntei se ela ia mandar B-roll ou se eu usava os da pasta, citando os clipes da Millie Bobby Brown do projeto anterior. Ela respondeu irritada: "não tem nada a ver com Millie Bobby Brown" e mandou o roteiro. | B-roll precisa casar com o roteiro do vídeo atual. Material de projeto anterior nunca é opção. Sem B-roll do tema, eu mesmo busco imagens adequadas (seção 4c) e entrego, sem fazer perguntas desnecessárias. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
