@@ -46,8 +46,11 @@ ou excesso de transições. Inspiração = referências da pasta `Referência`, 
 **Gancho:** título em caixa alta, 3 linhas, Inter ExtraBold 62, branco com sombra, nos primeiros
 ~6 s, sobre a meia tela (na faixa do degradê). Primeiro corte por volta de 3 s, título sai ~6 s.
 
-**Legenda:** uma palavra por vez, minúscula (exceto nomes próprios via `keep_case`), Inter
-ExtraBold 76, branca, contorno preto 4 + sombra, sem pontuação. Posição **nunca sobre rostos**:
+**Legenda:** uma palavra por vez, minúscula (exceto nomes próprios via `keep_case`),
+**Montserrat ExtraBold 78** (pedido de 2026-11-11; antes era Inter ExtraBold 76). A fonte não vem
+instalada: baixe de `https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-ExtraBold.ttf`
+(licença OFL) e passe a pasta em `ass=...:fontsdir=`. A palavra-chave do CTA (ex.: INVESTIR) vai
+em caixa alta e dourada, branca, contorno preto 4 + sombra, sem pontuação. Posição **nunca sobre rostos**:
 `talk` y=1250 (peito), `split` y=1580 (peito da apresentadora deslocada), `full` y=1640 (abaixo do
 queixo do B-roll). Transcrição: faster-whisper `medium`, pt, word timestamps.
 
