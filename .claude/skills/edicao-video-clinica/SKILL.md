@@ -172,6 +172,14 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
 - Mixkit até libera o host, mas devolve 429 (anti-robô). **Não tente contornar.** Pexels e
   Pixabay ficam bloqueados. Se a usuária puder, peça que ela baixe vídeos no Pexels ou Mixkit e
   salve na pasta Imagens; se não puder, use gráficos + as melhores fotos.
+- **"Totalmente meia tela"** = o vídeo inteiro em `split`, do primeiro ao último quadro
+  (`start_split` / `end_split` no project.json). Só trocam os painéis de cima, com crossfade e
+  foco. Quando não houver vídeos reais, use as cenas animadas de `scripts/graphics2.py`
+  (fundo azul com bolhas subindo, sempre em movimento; copo de leite com nível animado, caixa,
+  lupa, selos, listas sincronizadas com a fala), uma cena a cada 2–7 s, sincronizada com a
+  transcrição. Exemplo: `project.leite.example.json` (vídeo do Nutri Alexandre, 17 cenas).
+- Confira o volume final: a voz + `volume` pode passar de -14 LUFS (chegou a -12,7). Ajuste o
+  ganho do mix e meça com `ebur128`.
 - Ritmo: não deixe o apresentador mais de ~10 s seguidos na meia tela. Frases de impacto
   ("isso é uma grande oportunidade", "o juro não entra no consórcio") ficam com o rosto em tela
   cheia.

@@ -39,7 +39,11 @@ for i,it in enumerate(plan):
         cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-frames:v',str(n),'-vf','scale=1080:1920,setsar=1,fps=30']+enc+[out]
     else:
         ein_talk=not(prev and prev[2]=='split'); eout_talk=not(nxt and nxt[2]=='split')
-        if ein_talk: sfx.append({'t':s0-0.30,'kind':'whoosh','gain':-10,'seed':i+40})
+        first_hold = (prev is None and P.get('start_split'))      # video opens already in half-screen
+        if first_hold: ein_talk=False
+        if nxt is None and P.get('end_split'): eout_talk=False
+        if first_hold: pass
+        elif ein_talk: sfx.append({'t':s0-0.30,'kind':'whoosh','gain':-10,'seed':i+40})
         else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':-13,'seed':i+80})
         if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':-18,'seed':i+120})
         ein=f"(1-pow(1-clip(t/{TI},0,1),3))" if ein_talk else "1"
@@ -52,7 +56,7 @@ for i,it in enumerate(plan):
             f"[bgv][p]overlay=x=0:y='{SH}*{ein}*{eout}':eval=frame[base];"
             f"[2:v]format=gray,split[m1][m2];[1:v]setpts=PTS-STARTPTS,format=yuv420p,split[ps][pq];[pq]gblur=sigma=28[pbl];"
             f"[ps][pbl]blend=all_expr='A*{K}+B*(1-{K})',format=rgba[pk];[pk][m1]alphamerge,{fades}[top];")
-        if not ein_talk:
+        if not ein_talk and not first_hold:
             pD=(fr(prev[1])-fr(prev[0]))/FPS
             inputs+=['-ss',f'{pD:.3f}','-i',panels[i-1]]
             fc+="[3:v]setpts=PTS-STARTPTS,format=rgba[pp];[pp][m2]alphamerge[ptop];[base][ptop]overlay=0:0[base2];[base2][top]overlay=0:0,format=yuv420p[v]"
@@ -65,7 +69,7 @@ subprocess.run(['python3','-I',SFXPY,'sfx_events.json',str(E),'sfx.wav'],check=T
 open('list.txt','w').write(''.join(f"file '{x}'\n" for x in lst))
 subprocess.run(['ffmpeg','-v','error','-y','-f','concat','-safe','0','-i','list.txt','-c','copy','video_only.mp4'],check=True)
 subprocess.run(['ffmpeg','-v','error','-y','-i','video_only.mp4','-i','main.mov','-i','sfx.wav','-filter_complex',
- f"[1:a]atrim=0:{E},asetpts=PTS-STARTPTS,loudnorm=I=-14:TP=-2:LRA=11,volume=1.5dB,aresample=48000,aformat=channel_layouts=stereo[voice];"
+ f"[1:a]atrim=0:{E},asetpts=PTS-STARTPTS,loudnorm=I=-14:TP=-2:LRA=11,volume=-0.5dB,aresample=48000,aformat=channel_layouts=stereo[voice];"
  f"[2:a]aresample=48000,aformat=channel_layouts=stereo[fx];"
  f"[voice][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.89:level=false,afade=t=out:st={E-0.4}:d=0.4[a]",
  '-map','0:v','-map','[a]','-c:v','copy','-c:a','aac','-b:a','192k','-movflags','+faststart','-shortest','final.mp4'],check=True)

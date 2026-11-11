@@ -1,0 +1,392 @@
+{
+ "end": 77.0,
+ "presenter_shift": 150,
+ "start_split": true,
+ "end_split": true,
+ "plan": [
+  [
+   0.0,
+   4.5,
+   "split",
+   "gfx/g_cortar.mp4",
+   0,
+   0
+  ],
+  [
+   4.5,
+   10.3,
+   "split",
+   "gfx/g_tirar.mp4",
+   0,
+   0
+  ],
+  [
+   10.3,
+   12.45,
+   "split",
+   "gfx/g_erro.mp4",
+   0,
+   0
+  ],
+  [
+   12.45,
+   16.35,
+   "split",
+   "gfx/g_culpado.mp4",
+   0,
+   0
+  ],
+  [
+   16.35,
+   19.92,
+   "split",
+   "gfx/g_50.mp4",
+   0,
+   0
+  ],
+  [
+   19.92,
+   26.5,
+   "split",
+   "gfx/g_causas.mp4",
+   0,
+   0
+  ],
+  [
+   26.5,
+   32.25,
+   "split",
+   "gfx/g_lactose.mp4",
+   0,
+   0
+  ],
+  [
+   32.25,
+   34.45,
+   "split",
+   "gfx/g_ninguem.mp4",
+   0,
+   0
+  ],
+  [
+   34.45,
+   41.95,
+   "split",
+   "gfx/g_proteina.mp4",
+   0,
+   0
+  ],
+  [
+   41.95,
+   47.9,
+   "split",
+   "gfx/g_a1a2.mp4",
+   0,
+   0
+  ],
+  [
+   47.9,
+   53.8,
+   "split",
+   "gfx/g_digerir.mp4",
+   0,
+   0
+  ],
+  [
+   53.8,
+   57.9,
+   "split",
+   "gfx/g_junta.mp4",
+   0,
+   0
+  ],
+  [
+   57.9,
+   61.75,
+   "split",
+   "gfx/g_naocorte.mp4",
+   0,
+   0
+  ],
+  [
+   61.75,
+   66.8,
+   "split",
+   "gfx/g_bom.mp4",
+   0,
+   0
+  ],
+  [
+   66.8,
+   70.4,
+   "split",
+   "gfx/g_responde.mp4",
+   0,
+   0
+  ],
+  [
+   70.4,
+   73.75,
+   "split",
+   "gfx/g_envia.mp4",
+   0,
+   0
+  ],
+  [
+   73.75,
+   77.0,
+   "split",
+   "gfx/g_segue.mp4",
+   0,
+   0
+  ]
+ ],
+ "extra_sfx": [
+  {
+   "t": 0.5,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 0
+  },
+  {
+   "t": 2.9,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 1
+  },
+  {
+   "t": 4.0,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 2
+  },
+  {
+   "t": 5.7,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 7
+  },
+  {
+   "t": 9.4,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 8
+  },
+  {
+   "t": 11.5,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 14
+  },
+  {
+   "t": 13.65,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 21
+  },
+  {
+   "t": 15.3,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 22
+  },
+  {
+   "t": 16.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 28
+  },
+  {
+   "t": 18.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 29
+  },
+  {
+   "t": 20.97,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 35
+  },
+  {
+   "t": 22.07,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 36
+  },
+  {
+   "t": 23.02,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 37
+  },
+  {
+   "t": 24.57,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 38
+  },
+  {
+   "t": 25.62,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 39
+  },
+  {
+   "t": 28.85,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 42
+  },
+  {
+   "t": 30.5,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 43
+  },
+  {
+   "t": 31.7,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 44
+  },
+  {
+   "t": 32.85,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 49
+  },
+  {
+   "t": 35.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 56
+  },
+  {
+   "t": 37.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 57
+  },
+  {
+   "t": 38.55,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 58
+  },
+  {
+   "t": 40.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 59
+  },
+  {
+   "t": 43.8,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 63
+  },
+  {
+   "t": 44.6,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 64
+  },
+  {
+   "t": 46.15,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 65
+  },
+  {
+   "t": 49.3,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 70
+  },
+  {
+   "t": 50.3,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 71
+  },
+  {
+   "t": 52.8,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 72
+  },
+  {
+   "t": 56.15,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 77
+  },
+  {
+   "t": 57.15,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 78
+  },
+  {
+   "t": 58.1,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 84
+  },
+  {
+   "t": 60.0,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 85
+  },
+  {
+   "t": 64.35,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 91
+  },
+  {
+   "t": 65.4,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 92
+  },
+  {
+   "t": 66.05,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 93
+  },
+  {
+   "t": 67.0,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 98
+  },
+  {
+   "t": 68.4,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 99
+  },
+  {
+   "t": 70.75,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 105
+  },
+  {
+   "t": 75.3,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 112
+  },
+  {
+   "t": 75.7,
+   "kind": "pop",
+   "gain": -19,
+   "seed": 113
+  }
+ ]
+}
