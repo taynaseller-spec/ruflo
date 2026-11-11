@@ -164,6 +164,11 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
   "JUROS" riscado e "SEM JUROS"), balão de comentário com a palavra do CTA. Desenhe novos no
   mesmo estilo. No `plan`, o painel entra como `gfx/g_<nome>.mp4`. Gere uma prévia estática
   antes de renderizar.
+- O Wikimedia também pode bloquear os **arquivos de vídeo** (429 "Too many requests" em
+  upload.wikimedia.org): em 2026-11-11 foram 30 tentativas, uma por minuto, por 30 min, e nenhuma
+  passou. Não insista além disso. Peça à usuária que coloque os vídeos na pasta **"Vídeos de apoio"**
+  (pode ser pelo celular, no Pexels ou Mixkit) e dê a lista de termos de busca por fala do roteiro.
+  Ela prefere **vídeos** a fotos ("não quero imagem de fotos, quero vídeos").
 - Mixkit até libera o host, mas devolve 429 (anti-robô). **Não tente contornar.** Pexels e
   Pixabay ficam bloqueados. Se a usuária puder, peça que ela baixe vídeos no Pexels ou Mixkit e
   salve na pasta Imagens; se não puder, use gráficos + as melhores fotos.
