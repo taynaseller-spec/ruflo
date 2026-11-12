@@ -112,6 +112,7 @@ for i,(s0,e0,mode,clip,cs) in enumerate(plan):
             fc+="[m2]nullsink;[base][top]overlay=0:0,format=yuv420p[v]"
         cmd=['ffmpeg','-v','error','-y']+inputs+['-filter_complex',fc,'-map','[v]','-frames:v',str(n)]+enc+[out]
     if ONLY=='all' or str(i) in ONLY.split(','): subprocess.run(cmd,check=True); print(out,mode,round(D,2),flush=True)
+if P0.get('sfx') is False: sfx=[]   # 'sfx': false = no sound effects at all (voice only)
 for e in sfx: e['kind']=KIND(e['kind'])
 json.dump(sfx,open('sfx_events.json','w'))
 subprocess.run(['python3','-I',SFXPY,'sfx_events.json',str(fr(END)/FPS),'sfx.wav'],check=True)
