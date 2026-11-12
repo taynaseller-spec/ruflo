@@ -13,7 +13,9 @@ plan=[tuple(x[:5]) for x in P['plan']]   # [start,end,mode(talk|split|full),clip
 ZOOM={i:x[5] for i,x in enumerate(P['plan']) if len(x)>5 and x[5]}   # talk only: in|out|punch (only when asked, SKILL 4d)
 G={'whoosh':-13,'whoosh_soft':-17,'whoosh_down':-22,'thump':-13,'shimmer':-16,'pop':None,'zoom':-16,'full_out':None}; G.update(P0.get('sfx_gain',{}))
 V2=P0.get('sfx_style')=='v2'   # v2 = air/chime/boom/pluck design (SKILL 4e); kinds below map old->new
-KIND=(lambda k:{'whoosh':'air','whoosh_soft':'air_soft','whoosh_down':'air_down','thump':'boom','pop':'pluck','ding':'chime'}.get(k,k)) if V2 else (lambda k:k)
+STYLES={'v2':{'whoosh':'air','whoosh_soft':'air_soft','whoosh_down':'air_down','thump':'boom','pop':'pluck','ding':'chime'},
+        'common':{'whoosh':'whoosh_c','whoosh_soft':'swipe_c','whoosh_down':'swipe_c','thump':'whoosh_c','pop':'pop_c','ding':'ding_c','click':'click'}}  # SKILL 4f
+KIND=lambda k:STYLES.get(P0.get('sfx_style'),{}).get(k,k)
 ZT=P0.get('zoom_through',0)   # full-mode 'zoom through' transition strength (e.g. 0.06); 0 = plain blur dissolve
 if not os.path.exists('mask2.png'):
     import numpy as np, cv2
@@ -26,6 +28,8 @@ def face_stats(clip,a,b):
 def split_crop(clip,a,b):
     f=face_stats(clip,a,b); d=faces[clip]; Wsrc,Hsrc=d['W'],d['H']
     s=max(1080/Wsrc, BH/Hsrc); Hs=round(Hsrc*s); Ws=round(Wsrc*s)
+    ov=P0.get('crop_y',{}).get(f"{clip}@{a:g}")   # manual vertical crop (scaled px) when detection fails (back to camera)
+    if ov is not None: return s,Ws,Hs,(Ws-1080)//2,int(ov),None
     if f is None: return s,Ws,Hs,(Ws-1080)//2,max(0,(Hs-BH)//2),None
     eye=(f['cy']-0.12*f['h'])*s; top=(f['cy']-0.95*f['h'])*s; chin=(f['cy']+0.62*f['h'])*s
     y=eye-0.36*CLEAN                     # eyes on the upper third of the clean area
@@ -41,8 +45,8 @@ TI=0.38; TO=0.18
 def panel(idx,clip,a,d,tag,settle=0):
     s,Ws,Hs,x,y,_=split_crop(clip,a,a+d)
     zz=''
-    if ZT and settle:   # panel lands with a gentle zoom settle (1+ZT -> 1) and leaves with a small push
-        nn=round(d*FPS); zz=(f",scale=2160:1920,zoompan=z='1+{ZT:.3f}*pow(1-min(on/12,1),3)"+(f"+{ZT*0.6:.3f}*pow(max(on-{nn-6},0)/6,2)" if settle>1 else '')+
+    if ZT and settle:   # bit 1: panel lands with a zoom settle (1+ZT -> 1); bit 2: leaves with a small push
+        nn=round(d*FPS); zz=(f",scale=2160:1920,zoompan=z='1"+(f"+{ZT:.3f}*pow(1-min(on/12,1),3)" if settle&1 else '')+(f"+{ZT*0.6:.3f}*pow(max(on-{nn-6},0)/6,2)" if settle&2 else '')+
             f"':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x{BH}:fps=30")
     return f"[{idx}:v]fps=30,setpts=PTS-STARTPTS,scale={Ws}:{Hs}:flags=lanczos,crop=1080:{BH}:{x}:{y}{zz},setsar=1,format=yuv420p[{tag}]"
 lst=[]; sfx=[{'t':0.0,'kind':'thump','gain':G['thump']}]+([{'t':0.05,'kind':'shimmer','gain':G['shimmer'],'seed':3}] if P0.get('title_lines') else [])
@@ -80,22 +84,24 @@ for i,(s0,e0,mode,clip,cs) in enumerate(plan):
         cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-ss',str(cs),'-i',clip,'-filter_complex',fc,'-map','[v]','-frames:v',str(n)]+enc+[out]
     else:
         ein_talk = not (prev and prev[2]=='split'); eout_talk = not (nxt and nxt[2]=='split')
-        if ein_talk:
+        cold = i==0 and P0.get('cold_open')   # video opens already in split: no entry animation/sound
+        if cold: pass
+        elif ein_talk:
             sfx.append({'t':s0-0.30,'kind':'whoosh','gain':G['whoosh'],'seed':i+40})
             if G['pop'] is not None: sfx.append({'t':s0+0.05,'kind':'pop','gain':G['pop'],'seed':i})
         else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':G['whoosh_soft'],'seed':i+80})
         if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':G['whoosh_down'],'seed':i+120})
-        ein=f"(1-pow(1-clip(t/{TI},0,1),3))" if ein_talk else "1"
+        ein=f"(1-pow(1-clip(t/{TI},0,1),3))" if ein_talk and not cold else "1"
         sx=f"clip((t-{D-TO:.3f})/{TO},0,1)"
         eout=f"(1-{sx}*{sx}*(3-2*{sx}))" if eout_talk else "1"
-        Kin=f"clip(T/{TI},0,1)"; Kout=f"clip(({D:.3f}-T)/{TO},0,1)" if eout_talk else "1"
+        Kin=f"clip(T/{TI},0,1)" if not cold else "1"; Kout=f"clip(({D:.3f}-T)/{TO},0,1)" if eout_talk else "1"
         K=f"min({Kin},{Kout})"
-        fades=f"fade=t=in:st=0:d={TI*0.8:.3f}:alpha=1"+(f",fade=t=out:st={D-TO:.3f}:d={TO}:alpha=1" if eout_talk else "")
+        fades=("null" if cold else f"fade=t=in:st=0:d={TI*0.8:.3f}:alpha=1")+(f",fade=t=out:st={D-TO:.3f}:d={TO}:alpha=1" if eout_talk else "")
         inputs=['-ss',str(ss),'-i','main.mov','-ss',str(cs),'-i',clip,'-loop','1','-i','mask2.png']
         fc=(f"[0:v]scale=1080:1920,setsar=1,fps=30,setpts=PTS-STARTPTS,split[p][pb];"
             f"[pb]scale=270:480,gblur=sigma=10,scale=1080:1920,eq=brightness=-0.06[bgv];"
             f"[bgv][p]overlay=x=0:y='{SH}*{ein}*{eout}':eval=frame[base];"
-            f"[2:v]format=gray,split[m1][m2];"+panel(1,clip,cs,D,'pn',(1 if ein_talk else 0)+(1 if eout_talk else 0) if ein_talk else 0)+";"
+            f"[2:v]format=gray,split[m1][m2];"+panel(1,clip,cs,D,'pn',((1 if not cold else 0)+(2 if eout_talk else 0)) if ein_talk else 0)+";"
             f"[pn]split[ps][pq];[pq]gblur=sigma=28[pbl];[ps][pbl]blend=all_expr='A*{K}+B*(1-{K})',format=rgba[pk];"
             f"[pk][m1]alphamerge,{fades}[top];")
         if not ein_talk:

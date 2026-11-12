@@ -221,6 +221,20 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   sino e o impacto estalam (dá para ver no `showspectrumpic` como uma linha vertical).
 - `captions: false` remove a legenda; sem `title_lines`, sem título.
 
+## 4f. Abertura direta + sons "comuns" (2026-11-12)
+
+- `cold_open: true` → o vídeo **já abre em meia tela** no primeiro quadro: sem deslize, sem
+  focus pull e sem fade de entrada no primeiro segmento. A saída continua normal. A usuária
+  pediu assim ("não precisa dessa transição, já comece com a meia tela").
+- `sfx_style: "common"` → sons no estilo dos clássicos do CapCut, curtos e secos, quase sem
+  reverb: `whoosh_c` (entrada de B-roll e abertura), `swipe_c` (saídas e zoom punch), `pop_c`,
+  `ding_c` (sino de notificação nas palavras-chave), `click`. Ganhos usados: whoosh -9, swipe
+  -14/-15, abertura -11, pop -13, ding -15 (o v2 ficou "bonito" mas pouco familiar; para esta
+  usuária, **prefira o estilo common**).
+- `crop_y: {"<clip>@<início>": y}` força o corte vertical (px já escalados) na meia tela quando
+  a detecção falha (pessoa de costas). Confira sempre a folha de quadros: o detector errou num
+  B-roll com a moça de costas para a câmera e cortou a cabeça.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -233,6 +247,7 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
 | 6 | 2026-11-11 | No vídeo de consórcio ela não gostou das fotos do Commons (muitas fracas: fachada gasta, sala escura, calculadora pequena) e pediu "efeitos sonoros e transições", que já existiam mas estavam discretos demais para ela perceber. | Prefira gráficos animados sincronizados com a fala às fotos fracas; use só fotos fortes (arquitetura moderna, chaves, sala clara). Efeitos mais presentes para esse estilo: whoosh -10, suave -13, saída -18, impacto -11, mais um **pop** (-19) a cada elemento gráfico que aparece. Medido: whoosh ~13 dB abaixo da voz. |
 | 7 | 2026-11-11 | "Arruma os atrasos na hora que a meia tela sai": o B-roll ficava na tela até o começo da frase seguinte e saía em 0,32 s, o que dava sensação de atraso (não havia quadro congelado; conferi com YDIF). | Saída em 0,18 s, terminando no fim real da voz (detectado na forma de onda). Vale para `build.py` e `build_photo.py`. |
 | 8 | 2026-11-12 | V1 do vídeo do consórcio (consultor de imóveis): limites dos segmentos 2–3 quadros fora dos cortes do vídeo cortado; as transições começavam num take e terminavam em outro ("ultrapassando outro take"). Ela também achou que havia meia tela e B-roll demais, pediu efeitos "mais bonitos" e transições mais sofisticadas, e pediu sem legenda e sem título. | Alinhar todo limite aos cortes de take (seção 4e). Em vídeo de ~40 s: ~2 meias telas + ~2 B-rolls em tela cheia, o resto com o apresentador e zooms. Sons v2 + `zoom_through`. |
+| 9 | 2026-11-12 | V2 do consórcio: ela trocou o B-roll de abertura (vídeo novo na pasta), pediu para começar já em meia tela, sem transição de entrada, e pediu "efeitos sonoros mais comuns" no lugar dos sons v2 (sintéticos/etéreos). | `cold_open` + `sfx_style: common` (seção 4f). Sons familiares (whoosh, swipe, pop, ding) em vez de designs elaborados. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 

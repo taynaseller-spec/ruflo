@@ -91,6 +91,26 @@ def pluck(seed=0, f0=784.0):
     dur=0.9; n=int(SR*dur); t=np.arange(n)/SR
     y=np.sin(2*np.pi*f0*t)*np.exp(-t/0.22)+0.3*np.sin(2*np.pi*f0*4*t)*np.exp(-t/0.03)+0.15*np.sin(2*np.pi*f0*2*t)*np.exp(-t/0.1)
     y*=(1-np.exp(-t/0.002)); y=_rev(_tail(y,0.3),1.0,0.3,8000); y/=np.abs(y).max(); return _pan(y,0.1,0.1,0.006)
+# ---- "common" (2026-11-12): the familiar stock-style CapCut sounds, short and crisp, little reverb
+def whoosh_c(seed=0, dur=0.42):
+    r=np.random.default_rng(seed); n=int(SR*dur); x=r.standard_normal(n)
+    f,t,Z=stft(x,SR,nperseg=1024,noverlap=896); u=np.clip(t/dur,0,1)
+    fc=700*(5200/700)**np.sin(np.pi/2*np.clip(u/0.55,0,1))*np.where(u>0.55,0.6**((u-0.55)/0.45),1)
+    G=np.exp(-0.5*(np.log2((f[:,None]+1)/fc[None,:])/0.9)**2); _,y=istft(Z*G,SR,nperseg=1024,noverlap=896); y=y[:n]
+    tn=np.arange(n)/n; env=np.where(tn<0.5,(tn/0.5)**2,np.exp(-(tn-0.5)/0.5*5)); y=_rev(y*env,0.35,0.15,9000); y/=np.abs(y).max()
+    return _pan(y,-0.8,0.8)
+def swipe_c(seed=0):
+    r=np.random.default_rng(seed); n=int(SR*0.22); t=np.arange(n)/n
+    y=sosfilt(butter(2,[2500,9000],'bandpass',fs=SR,output='sos'),r.standard_normal(n))*np.sin(np.pi*t)**1.5
+    y=_tail(y,0.03); y/=np.abs(y).max(); return _pan(y,0.6,-0.6)
+def pop_c(seed=0):
+    n=int(SR*0.16); t=np.arange(n)/SR; f=380+900*(1-np.exp(-t/0.018))
+    y=np.sin(2*np.pi*np.cumsum(f)/SR)*np.exp(-t/0.035)*(1-np.exp(-t/0.0008))
+    y=_tail(y,0.03); y/=np.abs(y).max(); return np.stack([y,y],1)
+def ding_c(seed=0):
+    n=int(SR*1.1); t=np.arange(n)/SR; f0=1760.0
+    y=sum(a*np.sin(2*np.pi*f0*m*t)*np.exp(-t/d) for m,a,d in [(1,1,0.42),(2,0.28,0.2),(3,0.12,0.1),(0.5,0.18,0.3)])
+    y*=(1-np.exp(-t/0.001)); y=_rev(_tail(y,0.3),0.6,0.15,9000); y/=np.abs(y).max(); return np.stack([y,y],1)
 def db(g): return 10**(g/20)
 events=json.load(open(sys.argv[1])); total=float(sys.argv[2]); out=np.zeros((int(SR*(total+2)),2))
 for ev in events:
@@ -108,6 +128,10 @@ for ev in events:
     elif k=='air_down': x=air(0.55,1600,500,0.3,seed=s,p0=0.5,p1=-0.5,tone=0.05)
     elif k=='chime': x=chime(s)
     elif k=='boom': x=boom(s)
+    elif k=='whoosh_c': x=whoosh_c(s)
+    elif k=='swipe_c': x=swipe_c(s)
+    elif k=='pop_c': x=pop_c(s)
+    elif k=='ding_c': x=ding_c(s)
     elif k=='pluck': x=pluck(s,ev.get('f0',784.0))
     if ev['t']<0: continue
     i=int(ev['t']*SR); x=x*db(ev['gain']); out[i:i+len(x)]+=x[:len(out)-i]
