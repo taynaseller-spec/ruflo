@@ -9,7 +9,13 @@ fr=lambda t: round(t*FPS)
 faces=json.load(open('faces.json'))   # from faces.py on every B-roll clip
 # start, end, mode, clip, src_start   (each B-roll range = one single shot, chosen from face analysis)
 P=json.load(open('project.json'))
-plan=[tuple(x) for x in P['plan']]   # [start,end,mode(talk|split|full),clip,src_start]
+plan=[tuple(x[:5]) for x in P['plan']]   # [start,end,mode(talk|split|full),clip,src_start]
+ZOOM={i:x[5] for i,x in enumerate(P['plan']) if len(x)>5 and x[5]}   # talk only: in|out|punch (only when asked, SKILL 4d)
+G={'whoosh':-13,'whoosh_soft':-17,'whoosh_down':-22,'thump':-13,'shimmer':-16,'pop':None,'zoom':-16}; G.update(P0.get('sfx_gain',{}))
+if not os.path.exists('mask2.png'):
+    import numpy as np, cv2
+    yy=np.clip((np.arange(BH)-CLEAN)/FEATH,0,1); a=1-yy*yy*(3-2*yy)
+    cv2.imwrite('mask2.png',np.repeat((a*255).astype('uint8')[:,None],1080,1))
 def face_stats(clip,a,b):
     d=faces[clip]; fs=[x for x in d['faces'] if a-0.01<=x[0]<=b and x[1] is not None]
     if not fs: return None
@@ -32,14 +38,23 @@ TI=0.38; TO=0.18
 def panel(idx,clip,a,d,tag):
     s,Ws,Hs,x,y,_=split_crop(clip,a,a+d)
     return f"[{idx}:v]fps=30,setpts=PTS-STARTPTS,scale={Ws}:{Hs}:flags=lanczos,crop=1080:{BH}:{x}:{y},setsar=1,format=yuv420p[{tag}]"
-lst=[]; sfx=[{'t':0.0,'kind':'thump','gain':-13},{'t':0.05,'kind':'shimmer','gain':-16,'seed':3},{'t':P0['name_card']['start']-0.05,'kind':'shimmer','gain':-17,'seed':11}]
+lst=[]; sfx=[{'t':0.0,'kind':'thump','gain':G['thump']}]+([{'t':0.05,'kind':'shimmer','gain':G['shimmer'],'seed':3}] if P0.get('title_lines') else [])
+if P0.get('name_card'): sfx.append({'t':P0['name_card']['start']-0.05,'kind':'shimmer','gain':-17,'seed':11})
+sfx+=P0.get('sfx_extra',[])   # e.g. ding on key words, click
 for i,(s0,e0,mode,clip,cs) in enumerate(plan):
     n=fr(e0)-fr(s0); ss=fr(s0)/FPS; D=n/FPS; out=f'seg/{i:02d}.mp4'; lst.append(out)
     prev=plan[i-1] if i>0 else None; nxt=plan[i+1] if i+1<len(plan) else None
     if mode=='talk':
-        cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-frames:v',str(n),'-vf','scale=1080:1920,setsar=1,fps=30']+enc+[out]
+        vf='scale=1080:1920,setsar=1,fps=30'
+        if i in ZOOM:
+            zk=ZOOM[i]; zm=P0.get('zoom_max',1.10); ax,ay=P0.get('presenter_face',[540,700]); ax/=1080; ay/=1920
+            u=f"min(on/{n-1},1)"; eo=f"(1-pow(1-{u},3))"
+            z={'in':f"1+{zm-1:.3f}*{eo}",'out':f"{zm:.3f}-{zm-1:.3f}*{eo}",'punch':f"1+{zm-1:.3f}*(1-pow(1-min(on/7,1),3))"}[zk]
+            vf=(f"scale=1080:1920,setsar=1,fps=30,setpts=PTS-STARTPTS,scale=2160:3840,zoompan=z='{z}':x='{ax:.3f}*iw-{ax:.3f}*iw/zoom':y='{ay:.3f}*ih-{ay:.3f}*ih/zoom':d=1:s=1080x1920:fps=30,setsar=1")
+            if zk!='out': sfx.append({'t':s0-0.12,'kind':'whoosh_soft','gain':G['zoom'],'seed':i+160})
+        cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-frames:v',str(n),'-vf',vf]+enc+[out]
     elif mode=='full':
-        sfx.append({'t':s0-0.33,'kind':'whoosh','gain':-13,'seed':i})
+        sfx.append({'t':s0-0.33,'kind':'whoosh','gain':G['whoosh'],'seed':i})
         f=face_stats(clip,cs,cs+D); Wsrc,Hsrc=faces[clip]['W'],faces[clip]['H']
         ax=(f['cx']/Wsrc) if f else 0.5; ay=((f['cy']-0.1*f['h'])/Hsrc) if f else 0.45
         K=f"min(clip(T/0.42,0,1),clip(({D:.3f}-T)/0.34,0,1))"
@@ -51,9 +66,11 @@ for i,(s0,e0,mode,clip,cs) in enumerate(plan):
         cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-ss',str(cs),'-i',clip,'-filter_complex',fc,'-map','[v]','-frames:v',str(n)]+enc+[out]
     else:
         ein_talk = not (prev and prev[2]=='split'); eout_talk = not (nxt and nxt[2]=='split')
-        if ein_talk: sfx.append({'t':s0-0.30,'kind':'whoosh','gain':-14,'seed':i+40})
-        else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':-17,'seed':i+80})
-        if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':-22,'seed':i+120})
+        if ein_talk:
+            sfx.append({'t':s0-0.30,'kind':'whoosh','gain':G['whoosh'],'seed':i+40})
+            if G['pop'] is not None: sfx.append({'t':s0+0.05,'kind':'pop','gain':G['pop'],'seed':i})
+        else: sfx.append({'t':s0-0.22,'kind':'whoosh_soft','gain':G['whoosh_soft'],'seed':i+80})
+        if eout_talk: sfx.append({'t':e0-0.22,'kind':'whoosh_down','gain':G['whoosh_down'],'seed':i+120})
         ein=f"(1-pow(1-clip(t/{TI},0,1),3))" if ein_talk else "1"
         sx=f"clip((t-{D-TO:.3f})/{TO},0,1)"
         eout=f"(1-{sx}*{sx}*(3-2*{sx}))" if eout_talk else "1"
@@ -86,16 +103,20 @@ ev=[]
 for k,w in enumerate(words):
     txt=re.sub(r"[.,!?;:]","",w['w']).strip()
     if not txt or w['s']>=END: continue
-    if txt not in P0.get('keep_case',[]): txt=txt.lower()
+    if txt.lower() in P0.get('cta_words',[]): txt='{\\c&H37AFD4&}'+txt.upper()   # CTA keyword: caps + gold
+    elif txt not in P0.get('keep_case',[]): txt=txt.lower()
     s_=w['s']; nx=words[k+1]['s'] if k+1<len(words) else w['e']+0.4
     en=min(nx,w['e']+0.35) if nx-w['e']>0.35 else nx
     md=next((m for (a,b,m,_,_) in plan if a<=s_+0.05<b),'talk')
     y={'split':1580,'full':1640,'talk':1250}[md]
     ev.append(f"Dialogue: 1,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos(540,{y})}}{txt}")
-title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25); NC=P0["name_card"]
-ev.append(f"Dialogue: 2,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,735)\\fad(150,200)}}{title}")
-ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Name,,0,0,0,,{{\\pos(540,1640)\\fad(300,300)}}{NC['name']}")
-ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Role,,0,0,0,,{{\\pos(540,1724)\\fad(300,300)}}{NC['role']}")
+NC=P0.get("name_card")
+if P0.get("title_lines"):
+    title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25)
+    ev.append(f"Dialogue: 2,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,735)\\fad(150,200)}}{title}")
+if NC:
+    ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Name,,0,0,0,,{{\\pos(540,1640)\\fad(300,300)}}{NC['name']}")
+    ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Role,,0,0,0,,{{\\pos(540,1724)\\fad(300,300)}}{NC['role']}")
 HDR="""[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -104,7 +125,7 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter ExtraBold,76,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,4,2,5,40,40,0,1
+Style: Cap,Montserrat ExtraBold,78,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,4,2,5,40,40,0,1
 Style: Title,Inter ExtraBold,62,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,3,3,5,60,60,0,1
 Style: Name,Inter ExtraBold,74,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,3,2,5,40,40,0,1
 Style: Role,Inter SemiBold,42,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,4,0,1,2,2,5,40,40,0,1
@@ -114,7 +135,7 @@ hdr=HDR
 open('subs.ass','w').write(hdr+"[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"+"\n".join(ev)+"\n")
 E=fr(END)/FPS
 subprocess.run(['ffmpeg','-v','error','-y','-i','video_only.mp4','-i','main.mov','-i','sfx.wav','-filter_complex',
- f"[0:v]ass=subs.ass:fontsdir=/usr/share/fonts/opentype/inter[v];"
+ f"[0:v]ass=subs.ass:fontsdir=fonts[v];"
  f"[1:a]atrim=0:{E},asetpts=PTS-STARTPTS,loudnorm=I=-14:TP=-2:LRA=11,aresample=48000,aformat=channel_layouts=stereo[voice];"
  f"[2:a]aresample=48000,aformat=channel_layouts=stereo[fx];"
  f"[voice][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.92:level=false,afade=t=out:st={E-0.4}:d=0.4[a]",

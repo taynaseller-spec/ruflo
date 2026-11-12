@@ -186,6 +186,22 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
 - `presenter_shift` é calculado para cada apresentador: topo da cabeça ≈ 840 px na meia tela
   (foi 470 para a Dra. Cíntia e 230 para o consultor).
 
+## 4d. Pedido com zoom in/out, pop, ding, click (2026-11-12)
+
+Quando o pedido listar explicitamente zoom in/out e efeitos estilo CapCut (whoosh, pop, click, ding,
+swipe), o build.py aceita, por segmento `talk`, um 6.º campo no `plan`: `"in"` (aproximação lenta
+até `zoom_max`, padrão 1,10), `"out"` (afastamento) ou `"punch"` (aproximação rápida em ~0,23 s,
+para frases de impacto), ancorado em `presenter_face` [x,y]. Cada `in`/`punch` leva um whoosh
+suave. Use `sfx_extra` para `ding` (informação importante), `click` (enumeração "primeiro",
+"segundo") e `pop`. `sfx_gain` ajusta os ganhos. `cta_words` deixa a palavra do CTA em caixa
+alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado → sem cartão).
+- O título precisa sair **antes** da saída da meia tela (`title_end` ≤ fim do split − 0,3 s), senão
+  cobre o rosto do apresentador durante a transição.
+- B-roll sem pessoas (tour de apartamento): zere as detecções de `faces.json` desse clipe
+  (falsos positivos deslocam o corte).
+- Pessoa de cabeça baixa (ex.: assinando contrato) não é detectada e o corte central encosta a
+  cabeça no topo: use em `full`.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |

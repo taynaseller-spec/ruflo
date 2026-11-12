@@ -43,6 +43,14 @@ def pop(seed=0):
     y=np.sin(2*np.pi*np.cumsum(f)/SR)*np.exp(-t/0.045)*(1-np.exp(-t/0.0015))
     y+=0.35*np.sin(2*np.pi*2*np.cumsum(f)/SR)*np.exp(-t/0.025)
     y=reverb(y,0.5,0.18); y/=np.abs(y).max(); return np.stack([y*0.92,y],1)
+def ding(seed=0):                      # soft bell for key info (original synthesis)
+    dur=1.4; n=int(SR*dur); t=np.arange(n)/SR; f0=1318.5
+    y=sum(a*np.sin(2*np.pi*f0*m*t)*np.exp(-t/d) for m,a,d in [(1,1,0.55),(2.01,0.35,0.3),(2.76,0.22,0.18),(4.07,0.1,0.1)])
+    y*=(1-np.exp(-t/0.002)); y=reverb(y,1.0,0.3); y/=np.abs(y).max(); return np.stack([y,y*0.95],1)
+def click(seed=0):                     # short UI click
+    n=int(SR*0.12); t=np.arange(n)/SR; r=np.random.default_rng(seed)
+    y=sosfilt(butter(2,[1800,6500],'bandpass',fs=SR,output='sos'),r.standard_normal(n))*np.exp(-t/0.006)
+    y+=0.6*np.sin(2*np.pi*2400*t)*np.exp(-t/0.01); y/=np.abs(y).max(); return np.stack([y,y],1)
 def db(g): return 10**(g/20)
 events=json.load(open(sys.argv[1])); total=float(sys.argv[2]); out=np.zeros((int(SR*(total+2)),2))
 for ev in events:
@@ -53,6 +61,8 @@ for ev in events:
     elif k=='shimmer': x=shimmer(s)
     elif k=='thump': x=thump()
     elif k=='pop': x=pop(s)
+    elif k=='ding': x=ding(s)
+    elif k=='click': x=click(s)
     if ev['t']<0: continue
     i=int(ev['t']*SR); x=x*db(ev['gain']); out[i:i+len(x)]+=x[:len(out)-i]
 out=out[:int(SR*total)]
