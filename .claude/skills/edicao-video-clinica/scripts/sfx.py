@@ -51,6 +51,46 @@ def click(seed=0):                     # short UI click
     n=int(SR*0.12); t=np.arange(n)/SR; r=np.random.default_rng(seed)
     y=sosfilt(butter(2,[1800,6500],'bandpass',fs=SR,output='sos'),r.standard_normal(n))*np.exp(-t/0.006)
     y+=0.6*np.sin(2*np.pi*2400*t)*np.exp(-t/0.01); y/=np.abs(y).max(); return np.stack([y,y],1)
+# ---- v2 (2026-11-12): softer, "prettier" design: pink-noise doppler air, FM chime, sub boom, marimba pluck
+def _lp(x,fc,o=2): return sosfilt(butter(o,fc,'lowpass',fs=SR,output='sos'),x)
+def _rev(x,t60,mix,bright=6000):
+    n=int(SR*t60); ir=rng.standard_normal(n)*np.exp(-6.9*np.arange(n)/n); ir=sosfilt(butter(2,[200,bright],'bandpass',fs=SR,output='sos'),ir); ir/=np.sqrt((ir**2).sum())
+    w=fftconvolve(x,ir); o=np.zeros(len(w)); o[:len(x)]+=x*(1-mix); o+=w*mix; return _tail(o,0.25)
+def _tail(y,sec=0.35):
+    k=min(len(y),int(sec*SR)); y=y.copy(); y[-k:]*=np.cos(np.linspace(0,np.pi/2,k))**2; return y
+def _pan(y,p0,p1,haas=0.0):
+    m=len(y); p=np.linspace(p0,p1,m); th=(p+1)*np.pi/4; L=y*np.cos(th); R=y*np.sin(th)
+    if haas: d=int(haas*SR); R=np.concatenate([np.zeros(d),R[:-d]])
+    return np.stack([L,R],1)
+def air(dur=0.75, f_lo=220, f_hi=2600, peak=0.58, seed=0, p0=-0.6, p1=0.6, tone=0.12):
+    r=np.random.default_rng(seed); n=int(SR*dur); x=r.standard_normal(n)
+    f,t,Z=stft(x,SR,nperseg=2048,noverlap=1792); Z=Z/np.sqrt(np.maximum(f[:,None],40)/40)   # pink
+    u=np.clip(t/dur,0,1); up=np.clip(u/peak,0,1); dn=np.clip((u-peak)/(1-peak),0,1)
+    fc=np.where(u<peak, f_lo*(f_hi/f_lo)**(up**1.6), f_hi*(0.45)**dn)                       # doppler: rise then fall
+    G=np.exp(-0.5*(np.log2((f[:,None]+1)/fc[None,:])/0.75)**2)
+    _,y=istft(Z*G,SR,nperseg=2048,noverlap=1792); y=y[:n]
+    tn=np.arange(n)/n; env=np.where(tn<peak,np.sin(np.pi/2*tn/peak)**3,np.exp(-(tn-peak)/(1-peak)*3.2))
+    y=_lp(y*env,9000)
+    fi=np.interp(np.arange(n)/SR,t,fc)*1.0; wh=np.sin(2*np.pi*np.cumsum(fi)/SR)*env**2*tone      # faint tonal sheen
+    y=y/np.abs(y).max()+wh; y=_rev(y,0.9,0.28,7000); y/=np.abs(y).max()
+    return _pan(y,p0,p1,0.004)
+def chime(seed=0, notes=(1318.5,1975.5), gap=0.075):
+    dur=2.2; n=int(SR*dur); t=np.arange(n)/SR; y=np.zeros(n)
+    for k,f0 in enumerate(notes):
+        st=int(k*gap*SR); tt=t[:n-st]; idx=1.6*np.exp(-tt/0.12)
+        bell=np.sin(2*np.pi*f0*tt+idx*np.sin(2*np.pi*f0*3.5*tt))*np.exp(-tt/0.9)*(1-np.exp(-tt/0.004))
+        bell+=0.25*np.sin(2*np.pi*f0*2*tt)*np.exp(-tt/0.35)
+        y[st:]+=bell*(1 if k==0 else 0.75)
+    y=_rev(_tail(_lp(y,9000),0.6),1.8,0.38,9000); y/=np.abs(y).max(); return _pan(y,-0.15,0.15,0.008)
+def boom(seed=0):
+    dur=1.6; n=int(SR*dur); t=np.arange(n)/SR; f=36+30*np.exp(-t/0.12)
+    y=np.sin(2*np.pi*np.cumsum(f)/SR)*np.exp(-t/0.55)*(1-np.exp(-t/0.006))
+    nz=_lp(np.random.default_rng(seed).standard_normal(n),350)*np.exp(-t/0.08)*0.5
+    y=_rev(_tail(y+nz,0.5),1.4,0.22,3000); y/=np.abs(y).max(); return np.stack([y,y],1)
+def pluck(seed=0, f0=784.0):
+    dur=0.9; n=int(SR*dur); t=np.arange(n)/SR
+    y=np.sin(2*np.pi*f0*t)*np.exp(-t/0.22)+0.3*np.sin(2*np.pi*f0*4*t)*np.exp(-t/0.03)+0.15*np.sin(2*np.pi*f0*2*t)*np.exp(-t/0.1)
+    y*=(1-np.exp(-t/0.002)); y=_rev(_tail(y,0.3),1.0,0.3,8000); y/=np.abs(y).max(); return _pan(y,0.1,0.1,0.006)
 def db(g): return 10**(g/20)
 events=json.load(open(sys.argv[1])); total=float(sys.argv[2]); out=np.zeros((int(SR*(total+2)),2))
 for ev in events:
@@ -63,6 +103,12 @@ for ev in events:
     elif k=='pop': x=pop(s)
     elif k=='ding': x=ding(s)
     elif k=='click': x=click(s)
+    elif k=='air': x=air(ev.get('dur',0.75),seed=s,p0=ev.get('p0',-0.6),p1=ev.get('p1',0.6))
+    elif k=='air_soft': x=air(0.5,320,1800,0.55,seed=s,p0=-0.3,p1=0.3,tone=0.06)
+    elif k=='air_down': x=air(0.55,1600,500,0.3,seed=s,p0=0.5,p1=-0.5,tone=0.05)
+    elif k=='chime': x=chime(s)
+    elif k=='boom': x=boom(s)
+    elif k=='pluck': x=pluck(s,ev.get('f0',784.0))
     if ev['t']<0: continue
     i=int(ev['t']*SR); x=x*db(ev['gain']); out[i:i+len(x)]+=x[:len(out)-i]
 out=out[:int(SR*total)]

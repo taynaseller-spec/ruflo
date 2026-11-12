@@ -202,6 +202,25 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
 - Pessoa de cabeça baixa (ex.: assinando contrato) não é detectada e o corte central encosta a
   cabeça no topo: use em `full`.
 
+## 4e. Alinhar ao take + transições e sons v2 (2026-11-12)
+
+- **Todo limite de segmento do `plan` fica exatamente num corte de take do vídeo principal**
+  (ou dentro de um take, nunca 1–5 quadros antes/depois de um corte). Detecte os cortes antes de
+  montar o plano: `signalstats` YDIF no main (corte = YDIF > ~4× a mediana) ou
+  `select='gt(scene,0.06)'`. Entrada de `full`/`split` começa no corte; a saída termina no corte
+  ou no meio do mesmo take. Verifique no final: YDIF do `final.mp4` sem "lascas" (dois cortes
+  separados por < 5 quadros que não sejam movimento de transição).
+- `zoom_through` (ex.: 0.06) no project.json: na tela cheia o apresentador avança sob o dissolve
+  e o B-roll pousa de 1,08 → 1,0; na saída, o inverso. Na meia tela o painel pousa com zoom suave
+  e sai com um leve avanço.
+- `sfx_style: "v2"` troca os sons por: `air` (whoosh de ar com doppler e reverb, mais macio),
+  `air_soft`, `air_down`, `chime` (sino FM de duas notas, para palavras-chave), `boom` (impacto
+  grave na abertura), `pluck` (nota de marimba quando o painel aparece). Ganhos aprovados para
+  teste: air -12, air_soft -16 (só em zoom `punch`), air_down -18 (saída de split e de full), boom
+  -12, pluck -21, chime -20. Todo som sintetizado precisa de fade no fim (`_tail`): sem isso o
+  sino e o impacto estalam (dá para ver no `showspectrumpic` como uma linha vertical).
+- `captions: false` remove a legenda; sem `title_lines`, sem título.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -213,6 +232,7 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
 | 5 | 2026-11-11 | Num vídeo novo (consórcio/imóveis), perguntei se ela ia mandar B-roll ou se eu usava os da pasta, citando os clipes da Millie Bobby Brown do projeto anterior. Ela respondeu irritada: "não tem nada a ver com Millie Bobby Brown" e mandou o roteiro. | B-roll precisa casar com o roteiro do vídeo atual. Material de projeto anterior nunca é opção. Sem B-roll do tema, eu mesmo busco imagens adequadas (seção 4c) e entrego, sem fazer perguntas desnecessárias. |
 | 6 | 2026-11-11 | No vídeo de consórcio ela não gostou das fotos do Commons (muitas fracas: fachada gasta, sala escura, calculadora pequena) e pediu "efeitos sonoros e transições", que já existiam mas estavam discretos demais para ela perceber. | Prefira gráficos animados sincronizados com a fala às fotos fracas; use só fotos fortes (arquitetura moderna, chaves, sala clara). Efeitos mais presentes para esse estilo: whoosh -10, suave -13, saída -18, impacto -11, mais um **pop** (-19) a cada elemento gráfico que aparece. Medido: whoosh ~13 dB abaixo da voz. |
 | 7 | 2026-11-11 | "Arruma os atrasos na hora que a meia tela sai": o B-roll ficava na tela até o começo da frase seguinte e saía em 0,32 s, o que dava sensação de atraso (não havia quadro congelado; conferi com YDIF). | Saída em 0,18 s, terminando no fim real da voz (detectado na forma de onda). Vale para `build.py` e `build_photo.py`. |
+| 8 | 2026-11-12 | V1 do vídeo do consórcio (consultor de imóveis): limites dos segmentos 2–3 quadros fora dos cortes do vídeo cortado; as transições começavam num take e terminavam em outro ("ultrapassando outro take"). Ela também achou que havia meia tela e B-roll demais, pediu efeitos "mais bonitos" e transições mais sofisticadas, e pediu sem legenda e sem título. | Alinhar todo limite aos cortes de take (seção 4e). Em vídeo de ~40 s: ~2 meias telas + ~2 B-rolls em tela cheia, o resto com o apresentador e zooms. Sons v2 + `zoom_through`. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
