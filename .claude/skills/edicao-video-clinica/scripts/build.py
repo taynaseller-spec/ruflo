@@ -69,18 +69,24 @@ for i,(s0,e0,mode,clip,cs) in enumerate(plan):
         if G['full_out'] is not None: sfx.append({'t':e0-0.30,'kind':'whoosh_down','gain':G['full_out'],'seed':i+200})
         f=face_stats(clip,cs,cs+D); Wsrc,Hsrc=faces[clip]['W'],faces[clip]['H']
         ax=(f['cx']/Wsrc) if f else 0.5; ay=((f['cy']-0.1*f['h'])/Hsrc) if f else 0.45
-        K=f"min(clip(T/0.42,0,1),clip(({D:.3f}-T)/0.34,0,1))"
-        mz=''; bz=f"1+0.03*on/{n}"
+        cold = i==0 and P0.get('cold_open')   # opens already on the B-roll: no dissolve in
+        K=f"min({'1' if cold else 'clip(T/0.42,0,1)'},clip(({D:.3f}-T)/0.34,0,1))"
+        FZ=P0.get('full_zoom',0.03)   # 0 = keep the clip's original framing, no push-in (SKILL 4h)
+        mz=''; bz=f"1+{FZ}*on/{n}"
         if ZT:   # zoom through: presenter pushes in under the dissolve, B-roll lands from 1+ZT; mirrored on the way out
             px,py=P0.get('presenter_face',[540,700]); px/=1080; py/=1920
             mz=(f",scale=2160:3840,zoompan=z='1+{ZT:.3f}*min(pow(min(on/9,1),2),1-pow(1-min(({n-1}-on)/9,1),2))'"
                 f":x='{px:.3f}*iw-{px:.3f}*iw/zoom':y='{py:.3f}*ih-{py:.3f}*ih/zoom':d=1:s=1080x1920:fps=30")
             bz=f"1+0.03*on/{n}+{ZT*1.3:.3f}*pow(1-min(on/11,1),3)+{ZT:.3f}*pow(max(on-{n-9},0)/9,2)"
+        # fit_clips: non-9:16 clip shown whole (no crop) over a blurred, darker copy of itself
+        src=("split[f1][f2];[f2]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=40,eq=brightness=-0.08[fb];"
+             "[f1]scale=1080:1920:force_original_aspect_ratio=decrease[ff];[fb][ff]overlay=(W-w)/2:(H-h)/2,"
+             if clip in P0.get('fit_clips',[]) else "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,")
         fc=(f"[0:v]scale=1080:1920,setsar=1,fps=30,setpts=PTS-STARTPTS{mz},setsar=1[m];"
-            f"[1:v]fps=30,setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,scale=2160:3840,"
+            f"[1:v]fps=30,setpts=PTS-STARTPTS,{src}scale=2160:3840,"
             f"zoompan=z='{bz}':x='({ax:.3f}*iw)-({ax:.3f}*iw/zoom)':y='({ay:.3f}*ih)-({ay:.3f}*ih/zoom)':d=1:s=1080x1920:fps=30,setsar=1,format=yuv420p,split[s][s2];"
             f"[s2]gblur=sigma=30[bl];[s][bl]blend=all_expr='A*{K}+B*(1-{K})',format=yuva420p,"
-            f"fade=t=in:st=0:d=0.30:alpha=1,fade=t=out:st={D-0.28:.3f}:d=0.28:alpha=1[top];[m][top]overlay=0:0,format=yuv420p[v]")
+            +("" if cold else "fade=t=in:st=0:d=0.30:alpha=1,")+f"fade=t=out:st={D-0.28:.3f}:d=0.28:alpha=1[top];[m][top]overlay=0:0,format=yuv420p[v]")
         cmd=['ffmpeg','-v','error','-y','-ss',str(ss),'-i','main.mov','-ss',str(cs),'-i',clip,'-filter_complex',fc,'-map','[v]','-frames:v',str(n)]+enc+[out]
     else:
         ein_talk = not (prev and prev[2]=='split'); eout_talk = not (nxt and nxt[2]=='split')

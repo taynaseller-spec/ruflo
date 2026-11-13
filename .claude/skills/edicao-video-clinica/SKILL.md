@@ -249,6 +249,18 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   em ~70 s ficaram 6 meias telas (2 com `split→split`) + 4 B-rolls em tela cheia, nada de zoom
   no `talk`, apresentadora no máximo ~10 s seguidos.
 
+## 4h. B-roll no enquadramento original, take inteiro (2026-11-13)
+
+- Pedido "pega os melhores takes das imagens de apoio sem cortar": B-roll **só em tela cheia**,
+  no enquadramento original (clipes 9:16 entram inteiros, sem corte nem zoom: `"full_zoom": 0`).
+  Meia tela sempre corta metade da altura do clipe, então **não use** quando ela pedir "sem cortar".
+- Cada trecho fica **dentro de um único take** do clipe de apoio: detecte as trocas com
+  `select='gt(scene,0.25)'` (flashes geram falsos cortes: confira numa folha com 6 quadros por
+  trecho) e escolha os takes mais bonitos (rosto de frente, nítido, sem texto, sem flash forte).
+- Clipe que não é 9:16 (ex.: 3:4 depois de tirar a tarja): `fit_clips` = clipe inteiro centralizado
+  sobre uma cópia desfocada e escurecida dele mesmo, sem cortar nada.
+- `cold_open` também vale para `full`: o vídeo abre direto no B-roll, sem dissolve de entrada.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -283,3 +295,4 @@ python3 -I scripts/build.py $WD            # all | none (só re-mixa/legenda) | 
 `project.json`: `end`, `presenter_shift`, `title_lines`, `title_end`, `name_card{name,role,start,end}`,
 `keep_case`, `plan` = lista `[início, fim, modo, clipe, início_no_clipe]` cobrindo o vídeo inteiro
 sem buracos. Monte o `plan` a partir da transcrição (frases) + `faces.json` (seção 3).
+| 11 | 2026-11-13 | V1 do vídeo Dakota Johnson: meias telas cortavam os clipes de apoio e alguns trechos misturavam pedaços de takes diferentes. Ela disse "não ficou bom, pega os melhores takes das imagens de apoio sem cortar" e confirmou: take inteiro **e** enquadramento original. | Seção 4h: B-roll em tela cheia, sem corte nem zoom, um take bom por trecho. Para esta usuária, prefira mostrar o clipe inteiro a recortar para a meia tela. |
