@@ -261,6 +261,17 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   sobre uma cópia desfocada e escurecida dele mesmo, sem cortar nada.
 - `cold_open` também vale para `full`: o vídeo abre direto no B-roll, sem dissolve de entrada.
 
+## 4i. "Sem parecer amador" (2026-11-13)
+
+O que fazia o vídeo parecer amador, e o que usar no lugar:
+- **Dissolve com fantasma** (rosto da apresentadora e B-roll sobrepostos por 0,3 s): use **corte
+  seco** (`"full_transition": "cut"`), entrando no começo da palavra e saindo no fim da frase.
+- **Fundo desfocado** atrás de um clipe que não é 9:16: recorte só as laterais para 9:16,
+  centralizado no rosto (altura inteira, nada da pessoa cortado). Gere `br/<clip>close.mp4` etc.
+  por take e rode `faces.py` neles.
+- **B-roll mole** (TikTok 576 px ampliado): `"broll_sharpen": "unsharp=7:7:0.6"`.
+- Mantidos: um take bonito por trecho, sem zoom, sem efeitos, sem legenda e sem título.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -296,3 +307,4 @@ python3 -I scripts/build.py $WD            # all | none (só re-mixa/legenda) | 
 `keep_case`, `plan` = lista `[início, fim, modo, clipe, início_no_clipe]` cobrindo o vídeo inteiro
 sem buracos. Monte o `plan` a partir da transcrição (frases) + `faces.json` (seção 3).
 | 11 | 2026-11-13 | V1 do vídeo Dakota Johnson: meias telas cortavam os clipes de apoio e alguns trechos misturavam pedaços de takes diferentes. Ela disse "não ficou bom, pega os melhores takes das imagens de apoio sem cortar" e confirmou: take inteiro **e** enquadramento original. | Seção 4h: B-roll em tela cheia, sem corte nem zoom, um take bom por trecho. Para esta usuária, prefira mostrar o clipe inteiro a recortar para a meia tela. |
+| 12 | 2026-11-13 | V2 do vídeo Dakota: ela pediu "sem parecer amador" (o "prever armador" da mensagem anterior era "parecer amador"). | Seção 4i: corte seco no lugar do dissolve, sem fundo desfocado (recorte só lateral para 9:16) e nitidez leve no B-roll. Quando a mensagem vier truncada pelo ditado, procure a palavra parecida no contexto ("armador" = "amador"). |
