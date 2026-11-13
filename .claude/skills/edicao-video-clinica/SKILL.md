@@ -235,6 +235,20 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   a detecção falha (pessoa de costas). Confira sempre a folha de quadros: o detector errou num
   B-roll com a moça de costas para a câmera e cortou a cabeça.
 
+## 4g. B-roll com tarja preta ou flashes de fotógrafo (2026-11-13)
+
+- **Tarja preta embutida** (vídeo baixado do TikTok com faixa em cima/embaixo): o modo `full`
+  mostra as tarjas. Detecte com `cropdetect` e gere `br/<clip>c.mp4` já cortado; rode `faces.py`
+  no clipe novo e junte ao `faces.json`.
+- **Flashes de tapete vermelho** (quadro branco inteiro ou faixa branca do rolling shutter):
+  troque o quadro com flash pelo anterior (detector: aumento de brilho numa faixa de 40 linhas
+  vs. mediana de ±3 quadros vizinhos, limiar ~45; quadro inteiro: YAVG > mediana+30). Um quadro
+  repetido não aparece; flash branco aparece muito.
+- Pedido "meia tela e B-roll, sem exagero, sem efeito sonoro, sem legenda, sem título, dinâmico
+  mas não exagerado": `cold_open`, `captions:false`, `sfx:false`, sem `title_lines` e sem cartão;
+  em ~70 s ficaram 6 meias telas (2 com `split→split`) + 4 B-rolls em tela cheia, nada de zoom
+  no `talk`, apresentadora no máximo ~10 s seguidos.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
