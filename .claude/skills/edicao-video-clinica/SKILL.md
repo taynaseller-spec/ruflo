@@ -163,7 +163,14 @@ O padrão vale para **qualquer cliente**, não só a clínica (ex.: consultor de
   lista de motivos, barras de procura/oferta/aluguel, cards financiamento × consórcio (com
   "JUROS" riscado e "SEM JUROS"), balão de comentário com a palavra do CTA. Desenhe novos no
   mesmo estilo. No `plan`, o painel entra como `gfx/g_<nome>.mp4`. Gere uma prévia estática
-  antes de renderizar.
+  antes de renderizar. `scripts/graphics3.py` (2026-11-17, "edita com gráficos e destaques",
+  vídeo de reforma tributária/ITBI): 2027 contando, ITBI "só isso?", impostos embutidos na barra
+  de preço, PIS/COFINS/ICMS riscados → IBS + CBS, olho "mais visível", impulso × estratégia,
+  checklist do consórcio, CTA "PLANEJAMENTO" digitado (`graphics3.py <dir> preview` gera a
+  folha). Painéis de `gfx/` precisam de entrada em `faces.json` (`{"W":1080,"H":960,"faces":[]}`).
+  "Destaques" = palavras-chave da legenda em dourado/caixa alta (`cta_words`) + zoom `punch`
+  nas frases de impacto. Corrija na transcrição erros como "e TBI" → "ITBI" e
+  "Aumenta" → "Comenta".
 - O Wikimedia também pode bloquear os **arquivos de vídeo** (429 "Too many requests" em
   upload.wikimedia.org): em 2026-11-11 foram 30 tentativas, uma por minuto, por 30 min, e nenhuma
   passou. Não insista além disso. Peça à usuária que coloque os vídeos na pasta **"Vídeos de apoio"**
