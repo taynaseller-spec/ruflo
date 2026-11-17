@@ -130,8 +130,8 @@ for k,w in enumerate(words):
     s_=w['s']; nx=words[k+1]['s'] if k+1<len(words) else w['e']+0.4
     en=min(nx,w['e']+0.35) if nx-w['e']>0.35 else nx
     md=next((m for (a,b,m,_,_) in plan if a<=s_+0.05<b),'talk')
-    y={'split':1580,'full':1640,'talk':1250}[md]
-    ev.append(f"Dialogue: 1,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos(540,{y})}}{txt}")
+    y={'split':1580,'full':1640,'talk':1250,**P0.get('caption_y',{})}[md]   # caption_y: per-presenter chest height (SKILL 2)
+    ev.append(f"Dialogue: 1,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos({P0.get('caption_x',540)},{y})}}{txt}")
 NC=P0.get("name_card")
 if P0.get("title_lines"):
     title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25)
