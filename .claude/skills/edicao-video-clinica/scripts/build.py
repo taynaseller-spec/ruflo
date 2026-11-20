@@ -132,6 +132,9 @@ for k,w in enumerate(words):
     md=next((m for (a,b,m,_,_) in plan if a<=s_+0.05<b),'talk')
     y={'split':1580,'full':1640,'talk':1250}[md]
     ev.append(f"Dialogue: 1,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos(540,{y})}}{txt}")
+if P0.get('caption_style')=='ref' and P0.get('captions',True) is not False:   # SKILL 4g (Referência nova)
+    sys.path.insert(0,os.path.dirname(SFXPY)); import captions_ref
+    REFSTY,ev=captions_ref.build(words,plan,P0,END)
 NC=P0.get("name_card")
 if P0.get("title_lines"):
     title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25)
@@ -153,7 +156,7 @@ Style: Name,Inter ExtraBold,74,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0
 Style: Role,Inter SemiBold,42,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,4,0,1,2,2,5,40,40,0,1
 
 """
-hdr=HDR
+hdr=HDR.rstrip('\n')+'\n'+(REFSTY if P0.get('caption_style')=='ref' else '')+'\n'
 open('subs.ass','w').write(hdr+"[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"+"\n".join(ev)+"\n")
 E=fr(END)/FPS
 subprocess.run(['ffmpeg','-v','error','-y','-i','video_only.mp4','-i','main.mov','-i','sfx.wav','-filter_complex',

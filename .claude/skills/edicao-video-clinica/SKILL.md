@@ -235,6 +235,26 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   a detecção falha (pessoa de costas). Confira sempre a folha de quadros: o detector errou num
   B-roll com a moça de costas para a câmera e cortou a cabeça.
 
+## 4g. Legenda estilo "Referência nova" (2026-11-20)
+
+Quando ela pedir a legenda da pasta **"Referência nova"** (vídeo da Boss Boutique Dental), use
+`"caption_style": "ref"` no project.json (`scripts/captions_ref.py`). "Só a referência da legenda" =
+copie **apenas** a legenda; o resto (meia tela, B-roll, transições) segue o padrão desta skill.
+- Blocos de 1–3 palavras (até ~15 caracteres), minúsculas, **Inter Medium 60**, branca, sem contorno,
+  com sombra difusa escura (`\bord7` + `\blur12`, alfa ~&H38/&H90). Aparecem secos, sem animação.
+- Palavras-chave (`caption_keywords`) em **Instrument Serif Italic 128**, logo abaixo do bloco
+  ("em quantas" / *fotos*), entrando com desfoque + espaçamento que se fecha em 0,26 s.
+- Frases de impacto (`caption_impact`: intervalos de tempo) em **Inter Bold 86**, subindo de uma
+  máscara (`\move` + `\clip`).
+- `caption_caps_until`: primeiras palavras do gancho em caixa alta (ref.: "VOCÊ").
+- Posição: `caption_y` por modo (talk 1260, split 1400, full 1560) e `caption_y_seg` por segmento
+  (foto antes/depois: 960, na divisão entre as duas metades).
+- Fontes em `<workdir>/fonts`: Inter-Medium.otf e Inter-Bold.otf (`cdn.jsdelivr.net/gh/rsms/inter@v3.19/docs/font-files/`),
+  InstrumentSerif-Italic.ttf (`cdn.jsdelivr.net/gh/google/fonts@main/ofl/instrumentserif/`). Não deixe
+  fontes variáveis na pasta (o libass escolhe o peso errado).
+- Sobre roupa clara/listrada a sombra fraca some: confira a legibilidade na folha de quadros.
+- Foto estática (ex.: antes/depois) entra como clipe: `ffmpeg -loop 1 -i foto.jpg -t 8 -r 30` cobrindo 1080x1920.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -249,6 +269,7 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
 | 8 | 2026-11-12 | V1 do vídeo do consórcio (consultor de imóveis): limites dos segmentos 2–3 quadros fora dos cortes do vídeo cortado; as transições começavam num take e terminavam em outro ("ultrapassando outro take"). Ela também achou que havia meia tela e B-roll demais, pediu efeitos "mais bonitos" e transições mais sofisticadas, e pediu sem legenda e sem título. | Alinhar todo limite aos cortes de take (seção 4e). Em vídeo de ~40 s: ~2 meias telas + ~2 B-rolls em tela cheia, o resto com o apresentador e zooms. Sons v2 + `zoom_through`. |
 | 9 | 2026-11-12 | V2 do consórcio: ela trocou o B-roll de abertura (vídeo novo na pasta), pediu para começar já em meia tela, sem transição de entrada, e pediu "efeitos sonoros mais comuns" no lugar dos sons v2 (sintéticos/etéreos). | `cold_open` + `sfx_style: common` (seção 4f). Sons familiares (whoosh, swipe, pop, ding) em vez de designs elaborados. |
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
+| 11 | 2026-11-20 | Vídeo de Natal (Boss Boutique Dental, lentes/clareamento): pediu B-roll da pasta "Vídeos de apoio" e só a legenda da "Referência nova". | Novo estilo `caption_style: "ref"` (seção 4g). Entregue sem efeitos sonoros (regra #10), oferecendo colocar. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
