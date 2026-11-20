@@ -116,6 +116,6 @@ def build(words, plan, P0, end):
         if c['key']:
             k = c['key']; ks = max(k['s'], s); txt = disp(k)
             ky = y + 78 if c['words'] else y
-            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky+3})\\bord0\\1c&H000000&\\blur5{ent.replace('alpha&H00&', 'alpha&HB4&')}}}{txt}")
+            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky})\\bord7\\3c&H000000&\\1c&H000000&\\blur20{ent.replace('alpha&H00&', 'alpha&H90&')}}}{txt}")
             ev.append(f"Dialogue: 2,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky}){ent}}}{txt}")
     return STYLES, ev

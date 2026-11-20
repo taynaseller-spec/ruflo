@@ -289,9 +289,9 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
 - **Posição por take, abaixo do queixo:** `caption_y_take` = queixo máximo do take (faces.py no
   main reduzido, `(cy+0.62h)*escala`) + ~160 px; na meia tela soma o `presenter_shift`.
   Ela reclamou de legenda "na minha cara" com y fixo 1250 em takes em que estava mais perto.
-- **Palavra manuscrita (serifada) sem fundo preto:** só uma sombra muito leve (`\bord0\blur5`,
-  alfa &HB4, 3 px abaixo). O desfoque preto forte fica só nas palavras em sans. Ela achou o fundo
-  preto na manuscrita "grosseiro"; quer algo delicado.
+- **Palavra manuscrita (serifada):** desfoque preto **suave e espalhado** atrás (`\bord7\blur20`,
+  alfa final &H90, centrado). O de v4 (`\bord10\blur16`, alfa &H70) ficou "grosseiro"; sem nenhum
+  desfoque (só sombra leve, v5) ela pediu o blur de volta. Aprovado: o meio-termo.
 - **Sem contorno preto:** `cap_glow: true` + estilo Cap/Title com Outline 0 e Shadow 0 → só um
   desfoque preto suave atrás da palavra (camada 0, `\bord10\blur16`, alfa ~&H60/&HA0).
 - **Não repetir o mesmo ângulo de B-roll.** Assista o clipe inteiro (folha de 4 quadros/s) e liste
@@ -317,6 +317,7 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
 | 13 | 2026-11-20 | V2 do Natal: legenda passava de um take para o outro e caía no rosto; o ângulo "depois" do dente apareceu duas vezes; contorno preto na legenda. | Seção 4i: legenda presa ao take e abaixo do queixo por take; só desfoque preto suave atrás; cada ângulo de B-roll uma vez só. |
 | 14 | 2026-11-20 | V3: ela preferiu a legenda dinâmica da V1 (estilo "ref": blocos + serifada + frases subindo), mas com o desfoque preto da V3; pediu abrir com o dente pronto e reclamou do zoom forte nos closes tirados da foto. | Para esta usuária, **legenda padrão = `caption_style: "ref"`** com desfoque preto suave (já embutido no captions_ref.py, que também respeita `takes` e `caption_y_take`). Abrir com o resultado bonito. Não recortar foto em close (zoom ~3x); use a foto inteira, uma vez. Com material curto, prefira trechos longos com a apresentadora a repetir ângulo. |
 | 15 | 2026-11-20 | V4: fundo preto atrás da palavra manuscrita ficou grosseiro; legenda ainda atravessava takes (eu só tinha detectado as trocas de cenário, não os jump cuts no mesmo enquadramento). | Manuscrita só com sombra leve; detectar jump cuts sutis (seção 4i) e quebrar os blocos de legenda neles. |
+| 16 | 2026-11-20 | V5 sem desfoque na manuscrita: pediu o blur preto de volta. | Desfoque suave/espalhado na manuscrita (seção 4i), mais leve que o da v4. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
