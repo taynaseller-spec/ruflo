@@ -271,6 +271,21 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
   no CTA, números grandes ("72 MILHÕES"). Ofereça se ela mandar o print.
 - `ass_styles` (sobrescreve uma linha de estilo do ASS) e `title_y` são opções do build.py.
 
+## 4i. Legenda presa ao take + desfoque preto (2026-11-20)
+
+- **Legenda nunca atravessa um corte de take nem um limite do `plan`.** Passe `takes` (cortes do
+  vídeo principal, por YDIF) no project.json: a palavra que cruza um corte fica só do lado onde é
+  mais falada, com fim/início no quadro exato do corte (ASS só tem centésimos — o build.py já
+  compensa). Confira por número de quadro (`select=between(n,..)`), não com `-ss` (o seek engana).
+- **Posição por take, abaixo do queixo:** `caption_y_take` = queixo máximo do take (faces.py no
+  main reduzido, `(cy+0.62h)*escala`) + ~160 px; na meia tela soma o `presenter_shift`.
+  Ela reclamou de legenda "na minha cara" com y fixo 1250 em takes em que estava mais perto.
+- **Sem contorno preto:** `cap_glow: true` + estilo Cap/Title com Outline 0 e Shadow 0 → só um
+  desfoque preto suave atrás da palavra (camada 0, `\bord10\blur16`, alfa ~&H60/&HA0).
+- **Não repetir o mesmo ângulo de B-roll.** Assista o clipe inteiro (folha de 4 quadros/s) e liste
+  os ângulos. Se faltar material, tire enquadramentos diferentes da foto (close do antes, close do
+  depois, panorâmica do antes para o depois na meia tela) em vez de repetir o clipe.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -287,6 +302,7 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
 | 11 | 2026-11-20 | Vídeo de Natal (Boss Boutique Dental, lentes/clareamento): pediu B-roll da pasta "Vídeos de apoio" e só a legenda da "Referência nova". | Novo estilo `caption_style: "ref"` (seção 4g). Entregue sem efeitos sonoros (regra #10), oferecendo colocar. |
 | 12 | 2026-11-20 | Logo depois pediu o mesmo vídeo "igual aos 3 vídeos da pasta Referência" (não a "Referência nova"). | Seção 4h: abertura em meia tela com título de 2 linhas, B-roll em tela cheia, legenda de uma palavra menor (64). "Pasta referências" = pasta `Referência`, não `Referência nova`. |
+| 13 | 2026-11-20 | V2 do Natal: legenda passava de um take para o outro e caía no rosto; o ângulo "depois" do dente apareceu duas vezes; contorno preto na legenda. | Seção 4i: legenda presa ao take e abaixo do queixo por take; só desfoque preto suave atrás; cada ângulo de B-roll uma vez só. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 

@@ -129,8 +129,21 @@ for k,w in enumerate(words):
     elif txt not in P0.get('keep_case',[]): txt=txt.lower()
     s_=w['s']; nx=words[k+1]['s'] if k+1<len(words) else w['e']+0.4
     en=min(nx,w['e']+0.35) if nx-w['e']>0.35 else nx
-    md=next((m for (a,b,m,_,_) in plan if a<=s_+0.05<b),'talk')
+    # never let a word cross a take cut or a plan boundary (position changes there): keep it on the side
+    # where most of it is spoken (SKILL 4i)
+    for c in sorted(set(P0.get('takes',[]))|{x[0] for x in plan}):
+        c=fr(c)/FPS   # frame-exact; ASS has centiseconds, so stop just before / start just after the cut frame
+        if s_<c<en:
+            if c-s_>=en-c: en=c-0.006
+            else: s_=c+0.004
+    md=next((m for (a,b,m,_,_) in plan if a<=s_+0.02<b),'talk')
     y={'split':1580,'full':1640,'talk':1250}[md]
+    TY=P0.get('caption_y_take')   # per-take talk y (below the chin, from faces.py on the main video)
+    if TY and md!='full':
+        ti=sum(1 for c in P0['takes'] if c<=s_+0.02)-1; y=TY[max(0,ti)]+(P0.get('presenter_shift',0) if md=='split' else 0)
+        y=min(y,1580) if md=='split' else y
+    if P0.get('cap_glow'):   # soft black blur behind the word instead of an outline (SKILL 4i)
+        ev.append(f"Dialogue: 0,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos(540,{y})\\1c&H000000&\\1a&H{P0.get('cap_glow_alpha','60')}&\\bord10\\3c&H000000&\\3a&HA0&\\shad0\\blur16}}{re.sub(r'{[^}]*}','',txt)}")
     ev.append(f"Dialogue: 1,{ts(s_)},{ts(min(en,END))},Cap,,0,0,0,,{{\\pos(540,{y})}}{txt}")
 if P0.get('caption_style')=='ref' and P0.get('captions',True) is not False:   # SKILL 4g (Referência nova)
     sys.path.insert(0,os.path.dirname(SFXPY)); import captions_ref
@@ -138,6 +151,7 @@ if P0.get('caption_style')=='ref' and P0.get('captions',True) is not False:   # 
 NC=P0.get("name_card")
 if P0.get("title_lines"):
     title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25)
+    if P0.get('cap_glow'): ev.append(f"Dialogue: 1,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,{P0.get('title_y',735)})\\fad(150,200)\\1c&H000000&\\1a&H60&\\bord10\\3c&H000000&\\3a&HA0&\\shad0\\blur16}}{title}")
     ev.append(f"Dialogue: 2,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,{P0.get('title_y',735)})\\fad(150,200)}}{title}")
 if NC:
     ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Name,,0,0,0,,{{\\pos(540,1640)\\fad(300,300)}}{NC['name']}")
