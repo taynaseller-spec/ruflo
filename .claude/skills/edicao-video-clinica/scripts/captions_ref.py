@@ -84,10 +84,21 @@ def build(words, plan, P0, end):
         ns = (nxt['words'] + ([nxt['key']] if nxt['key'] else []))[0]['s'] if nxt else end
         e = ns if ns - e_last < 0.6 else e_last + 0.3
         e = min(e, end)
-        seg = next((k for k, x in enumerate(plan) if x[0] <= s + 0.05 < x[1]), None)
+        # never cross a take cut / plan boundary: keep the chunk where most of it is spoken (SKILL 4i)
+        for cut in sorted(set(P0.get('takes', [])) | {x[0] for x in plan}):
+            cut = round(cut * 30) / 30
+            if s < cut < e:
+                if cut - s >= e_last - cut: e = cut - 0.006
+                else: s = cut + 0.004
+        seg = next((k for k, x in enumerate(plan) if x[0] <= s + 0.02 < x[1]), None)
         md = plan[seg][2] if seg is not None else 'talk'
         y = yseg.get(seg, ymode[md])
-        sh = "{\\1c&H000000&\\1a&H38&\\bord7\\3c&H000000&\\3a&H90&\\blur12}"     # soft shadow layer (ref: no outline, diffuse shadow)
+        TY = P0.get('caption_y_take')   # per-take y below the chin (talk), + presenter_shift in split
+        if TY and md != 'full' and seg not in yseg:
+            ti = max(0, sum(1 for cut in P0['takes'] if cut <= s + 0.02) - 1)
+            y = TY[ti] + (P0.get('presenter_shift', 0) if md == 'split' else 0)
+        # soft black blur behind the text, no outline (SKILL 4i)
+        sh = "{\\1c&H000000&\\1a&H60&\\bord10\\3c&H000000&\\3a&HA0&\\blur16}"
         if c['kind'] == 'imp':
             txt = ' '.join(disp(x) for x in c['words'])
             mv = f"\\move(540,{y+70},540,{y},0,200)\\clip(0,{y-75},1080,{y+52})"
@@ -97,11 +108,11 @@ def build(words, plan, P0, end):
         ent = "\\alpha&HFF&\\blur12\\fsp22\\t(0,260,0.6,\\alpha&H00&\\blur0\\fsp0)"
         if c['words']:
             txt = ' '.join(disp(x) for x in c['words'])
-            ev.append(f"Dialogue: 1,{_ts(s)},{_ts(e)},RBase,,0,0,0,,{{\\pos(542,{y+3})}}{sh}{txt}")
+            ev.append(f"Dialogue: 1,{_ts(s)},{_ts(e)},RBase,,0,0,0,,{{\\pos(540,{y})}}{sh}{txt}")
             ev.append(f"Dialogue: 2,{_ts(s)},{_ts(e)},RBase,,0,0,0,,{{\\pos(540,{y})}}{txt}")
         if c['key']:
-            k = c['key']; ks = k['s']; txt = disp(k)
+            k = c['key']; ks = max(k['s'], s); txt = disp(k)
             ky = y + 78 if c['words'] else y
-            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(543,{ky+4})\\bord5\\3c&H000000&\\1c&H000000&\\blur12{ent.replace('alpha&H00&', 'alpha&H68&')}}}{txt}")
+            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky})\\bord10\\3c&H000000&\\1c&H000000&\\blur16{ent.replace('alpha&H00&', 'alpha&H70&')}}}{txt}")
             ev.append(f"Dialogue: 2,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky}){ent}}}{txt}")
     return STYLES, ev

@@ -303,6 +303,7 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
 | 11 | 2026-11-20 | Vídeo de Natal (Boss Boutique Dental, lentes/clareamento): pediu B-roll da pasta "Vídeos de apoio" e só a legenda da "Referência nova". | Novo estilo `caption_style: "ref"` (seção 4g). Entregue sem efeitos sonoros (regra #10), oferecendo colocar. |
 | 12 | 2026-11-20 | Logo depois pediu o mesmo vídeo "igual aos 3 vídeos da pasta Referência" (não a "Referência nova"). | Seção 4h: abertura em meia tela com título de 2 linhas, B-roll em tela cheia, legenda de uma palavra menor (64). "Pasta referências" = pasta `Referência`, não `Referência nova`. |
 | 13 | 2026-11-20 | V2 do Natal: legenda passava de um take para o outro e caía no rosto; o ângulo "depois" do dente apareceu duas vezes; contorno preto na legenda. | Seção 4i: legenda presa ao take e abaixo do queixo por take; só desfoque preto suave atrás; cada ângulo de B-roll uma vez só. |
+| 14 | 2026-11-20 | V3: ela preferiu a legenda dinâmica da V1 (estilo "ref": blocos + serifada + frases subindo), mas com o desfoque preto da V3; pediu abrir com o dente pronto e reclamou do zoom forte nos closes tirados da foto. | Para esta usuária, **legenda padrão = `caption_style: "ref"`** com desfoque preto suave (já embutido no captions_ref.py, que também respeita `takes` e `caption_y_take`). Abrir com o resultado bonito. Não recortar foto em close (zoom ~3x); use a foto inteira, uma vez. Com material curto, prefira trechos longos com a apresentadora a repetir ângulo. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
