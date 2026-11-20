@@ -255,6 +255,22 @@ copie **apenas** a legenda; o resto (meia tela, B-roll, transições) segue o pa
 - Sobre roupa clara/listrada a sombra fraca some: confira a legibilidade na folha de quadros.
 - Foto estática (ex.: antes/depois) entra como clipe: `ffmpeg -loop 1 -i foto.jpg -t 8 -r 30` cobrindo 1080x1920.
 
+## 4h. "Edite igual aos vídeos da pasta Referência" (2026-11-20)
+
+A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jovens americanos, Jessica Alba
+"20 anos depois") é a origem do padrão desta skill. Quando ela pedir "igual às referências":
+- Abre **já em meia tela** (`cold_open`), B-roll em cima, título em caixa alta de **2 linhas** na faixa
+  do degradê (Inter ExtraBold 52, sombra suave, `title_y` ~760) até ~0,3 s antes da saída do split;
+  troca `split→split` no meio do gancho.
+- Depois alterna apresentadora em tela cheia com B-roll em **tela cheia** (1,5–2,6 s) e uma meia tela
+  no meio; repetir clipe de apoio é aceitável quando o material é curto (as referências repetem).
+- Legenda **uma palavra por vez**, minúscula, menor que a padrão: `ass_styles.Cap` = Montserrat
+  ExtraBold **64**, contorno 3 e sombra semitransparentes (sem contorno preto duro). Palavra do CTA
+  em caixa alta dourada (`cta_words`).
+- O que as referências têm e eu não tenho como reproduzir sem material: print do perfil do Instagram
+  no CTA, números grandes ("72 MILHÕES"). Ofereça se ela mandar o print.
+- `ass_styles` (sobrescreve uma linha de estilo do ASS) e `title_y` são opções do build.py.
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -270,6 +286,7 @@ copie **apenas** a legenda; o resto (meia tela, B-roll, transições) segue o pa
 | 9 | 2026-11-12 | V2 do consórcio: ela trocou o B-roll de abertura (vídeo novo na pasta), pediu para começar já em meia tela, sem transição de entrada, e pediu "efeitos sonoros mais comuns" no lugar dos sons v2 (sintéticos/etéreos). | `cold_open` + `sfx_style: common` (seção 4f). Sons familiares (whoosh, swipe, pop, ding) em vez de designs elaborados. |
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
 | 11 | 2026-11-20 | Vídeo de Natal (Boss Boutique Dental, lentes/clareamento): pediu B-roll da pasta "Vídeos de apoio" e só a legenda da "Referência nova". | Novo estilo `caption_style: "ref"` (seção 4g). Entregue sem efeitos sonoros (regra #10), oferecendo colocar. |
+| 12 | 2026-11-20 | Logo depois pediu o mesmo vídeo "igual aos 3 vídeos da pasta Referência" (não a "Referência nova"). | Seção 4h: abertura em meia tela com título de 2 linhas, B-roll em tela cheia, legenda de uma palavra menor (64). "Pasta referências" = pasta `Referência`, não `Referência nova`. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 

@@ -138,7 +138,7 @@ if P0.get('caption_style')=='ref' and P0.get('captions',True) is not False:   # 
 NC=P0.get("name_card")
 if P0.get("title_lines"):
     title="\\N".join(P0["title_lines"]); TE=P0.get("title_end",6.25)
-    ev.append(f"Dialogue: 2,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,735)\\fad(150,200)}}{title}")
+    ev.append(f"Dialogue: 2,{ts(0)},{ts(TE)},Title,,0,0,0,,{{\\pos(540,{P0.get('title_y',735)})\\fad(150,200)}}{title}")
 if NC:
     ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Name,,0,0,0,,{{\\pos(540,1640)\\fad(300,300)}}{NC['name']}")
     ev.append(f"Dialogue: 2,{ts(NC['start'])},{ts(NC['end'])},Role,,0,0,0,,{{\\pos(540,1724)\\fad(300,300)}}{NC['role']}")
@@ -156,6 +156,8 @@ Style: Name,Inter ExtraBold,74,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0
 Style: Role,Inter SemiBold,42,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,4,0,1,2,2,5,40,40,0,1
 
 """
+for k,v in P0.get('ass_styles',{}).items():   # override a style line, e.g. Cap/Title (SKILL 4h)
+    HDR=re.sub(rf"^Style: {k},.*$",f"Style: {k},{v}",HDR,flags=re.M)
 hdr=HDR.rstrip('\n')+'\n'+(REFSTY if P0.get('caption_style')=='ref' else '')+'\n'
 open('subs.ass','w').write(hdr+"[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"+"\n".join(ev)+"\n")
 E=fr(END)/FPS
