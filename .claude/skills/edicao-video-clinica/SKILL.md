@@ -277,9 +277,21 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
   vídeo principal, por YDIF) no project.json: a palavra que cruza um corte fica só do lado onde é
   mais falada, com fim/início no quadro exato do corte (ASS só tem centésimos — o build.py já
   compensa). Confira por número de quadro (`select=between(n,..)`), não com `-ss` (o seek engana).
+- **Detecte também os jump cuts sutis** (mesmo enquadramento, só a pose pula): YDIF > 4× a mediana só
+  pega trocas de cenário. Calcule a diferença média entre quadros consecutivos e marque picos
+  isolados ≥ 2× a mediana dos 16 vizinhos que caem **numa fronteira de palavra** e mostram pulo de
+  pose/mão ao comparar o quadro n−1 com o n (no vídeo de Natal foram 8 cortes extras: 8,77, 8,93,
+  18,03, 19,7, 20,53, 28,03, 32,7, 35,7). Use a mesma altura de legenda em todos os takes do mesmo
+  enquadramento (sem pulinhos de 30 px).
+- O captions_ref.py quebra os blocos nos cortes (nenhuma palavra some) e o build.py corta no
+  quadro exato. Verifique: nenhum evento visível no quadro antes **e** no quadro do corte, e toda
+  palavra da transcrição aparece.
 - **Posição por take, abaixo do queixo:** `caption_y_take` = queixo máximo do take (faces.py no
   main reduzido, `(cy+0.62h)*escala`) + ~160 px; na meia tela soma o `presenter_shift`.
   Ela reclamou de legenda "na minha cara" com y fixo 1250 em takes em que estava mais perto.
+- **Palavra manuscrita (serifada) sem fundo preto:** só uma sombra muito leve (`\bord0\blur5`,
+  alfa &HB4, 3 px abaixo). O desfoque preto forte fica só nas palavras em sans. Ela achou o fundo
+  preto na manuscrita "grosseiro"; quer algo delicado.
 - **Sem contorno preto:** `cap_glow: true` + estilo Cap/Title com Outline 0 e Shadow 0 → só um
   desfoque preto suave atrás da palavra (camada 0, `\bord10\blur16`, alfa ~&H60/&HA0).
 - **Não repetir o mesmo ângulo de B-roll.** Assista o clipe inteiro (folha de 4 quadros/s) e liste
@@ -304,6 +316,7 @@ A pasta **"Referência"** (3 vídeos: trio de farmácia/pele 40+, cárie nos jov
 | 12 | 2026-11-20 | Logo depois pediu o mesmo vídeo "igual aos 3 vídeos da pasta Referência" (não a "Referência nova"). | Seção 4h: abertura em meia tela com título de 2 linhas, B-roll em tela cheia, legenda de uma palavra menor (64). "Pasta referências" = pasta `Referência`, não `Referência nova`. |
 | 13 | 2026-11-20 | V2 do Natal: legenda passava de um take para o outro e caía no rosto; o ângulo "depois" do dente apareceu duas vezes; contorno preto na legenda. | Seção 4i: legenda presa ao take e abaixo do queixo por take; só desfoque preto suave atrás; cada ângulo de B-roll uma vez só. |
 | 14 | 2026-11-20 | V3: ela preferiu a legenda dinâmica da V1 (estilo "ref": blocos + serifada + frases subindo), mas com o desfoque preto da V3; pediu abrir com o dente pronto e reclamou do zoom forte nos closes tirados da foto. | Para esta usuária, **legenda padrão = `caption_style: "ref"`** com desfoque preto suave (já embutido no captions_ref.py, que também respeita `takes` e `caption_y_take`). Abrir com o resultado bonito. Não recortar foto em close (zoom ~3x); use a foto inteira, uma vez. Com material curto, prefira trechos longos com a apresentadora a repetir ângulo. |
+| 15 | 2026-11-20 | V4: fundo preto atrás da palavra manuscrita ficou grosseiro; legenda ainda atravessava takes (eu só tinha detectado as trocas de cenário, não os jump cuts no mesmo enquadramento). | Manuscrita só com sombra leve; detectar jump cuts sutis (seção 4i) e quebrar os blocos de legenda neles. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 

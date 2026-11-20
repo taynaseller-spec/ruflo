@@ -40,6 +40,9 @@ def build(words, plan, P0, end):
 
     chunks = []  # dict(kind, words, key)
     cur = []
+    CUTS = sorted({round(c * 30) / 30 for c in P0.get('takes', [])[1:]} | {round(x[0] * 30) / 30 for x in plan[1:]})
+    # a cut between two words (judged at the word's midpoint) starts a new chunk, so no chunk spans takes
+    across = lambda a, b: any((a['s'] + a['e']) / 2 < c <= (b['s'] + b['e']) / 2 for c in CUTS)
 
     def flush():
         nonlocal cur
@@ -57,18 +60,18 @@ def build(words, plan, P0, end):
             # split long impact phrases into <=16-char pieces
             piece = []
             for g in grp:
-                if piece and len(' '.join(disp(x) for x in piece + [g])) > 16:
+                if piece and (across(piece[-1], g) or len(' '.join(disp(x) for x in piece + [g])) > 16):
                     chunks.append(dict(kind='imp', words=piece, key=None)); piece = []
                 piece.append(g)
             if piece: chunks.append(dict(kind='imp', words=piece, key=None))
             continue
         if _norm(w['w']) in keys:
-            if cur and len(cur) <= 2 and not re.search(PUNCT, cur[-1]['w']) and w['s'] - cur[-1]['e'] < 0.3:
+            if cur and len(cur) <= 2 and not across(cur[-1], w) and not re.search(PUNCT, cur[-1]['w']) and w['s'] - cur[-1]['e'] < 0.3:
                 chunks.append(dict(kind='base', words=cur, key=w)); cur = []
             else:
                 flush(); chunks.append(dict(kind='key', words=[], key=w))
             i += 1; continue
-        if cur and (w['s'] - cur[-1]['e'] > 0.3 or len(cur) >= 3 or
+        if cur and (w['s'] - cur[-1]['e'] > 0.3 or len(cur) >= 3 or across(cur[-1], w) or
                     len(' '.join(disp(x) for x in cur + [w])) > 15):
             flush()
         cur.append(w)
@@ -113,6 +116,6 @@ def build(words, plan, P0, end):
         if c['key']:
             k = c['key']; ks = max(k['s'], s); txt = disp(k)
             ky = y + 78 if c['words'] else y
-            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky})\\bord10\\3c&H000000&\\1c&H000000&\\blur16{ent.replace('alpha&H00&', 'alpha&H70&')}}}{txt}")
+            ev.append(f"Dialogue: 1,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky+3})\\bord0\\1c&H000000&\\blur5{ent.replace('alpha&H00&', 'alpha&HB4&')}}}{txt}")
             ev.append(f"Dialogue: 2,{_ts(ks)},{_ts(e)},RSer,,0,0,0,,{{\\pos(540,{ky}){ent}}}{txt}")
     return STYLES, ev
