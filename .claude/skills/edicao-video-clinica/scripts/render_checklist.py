@@ -5,7 +5,7 @@ WD = sys.argv[1]
 W, H, FPS = 1080, 1920, 30
 DUR = 36.5
 F = lambda n, s: ImageFont.truetype(f"{WD}/fonts/{n}", s)
-SERIF = f"DMSerifDisplay-Regular.ttf"; XB = "Montserrat-ExtraBold.ttf"; SB = "Montserrat-SemiBold.ttf"
+SERIF = "Montserrat-ExtraBold.ttf"; XB = "Montserrat-ExtraBold.ttf"; SB = "Montserrat-SemiBold.ttf"
 
 # ---------- items: (start, image, focal(fx,fy), verdict 'ok'/'no', verdict_time)
 ITEMS = [
@@ -27,7 +27,7 @@ LABELS = [(0.0, "Usar tônico"), (2.30, "Óleos essenciais"), (6.08, "Comprar um
           (18.16, "Retinol"), (19.28, "Esfoliar a pele"), (20.08, "todos os dias"), (22.74, "Dormir bem"),
           (24.34, "Seguir tendências"), (25.50, "do TikTok")]
 # final captions: (start, end, line1(sans small), line2(serif), t_line2, big)
-FINAL = [(28.50, 29.40, "E o que", "mais importa", 28.84, False),
+FINAL_OLD = [(28.50, 29.40, "E o que", "mais importa", 28.84, False),
          (29.40, 30.30, "para a", "sua pele?", 29.76, False),
          (30.30, 30.88, "", "Constância", 30.34, False),
          (30.88, 32.70, "nas poucas coisas", "que funcionam", 31.54, False),
@@ -35,6 +35,7 @@ FINAL = [(28.50, 29.40, "E o que", "mais importa", 28.84, False),
          (33.50, 34.40, "com quem precisa", "ver isso", 34.02, False),
          (34.40, 35.30, "e me segue aqui", "que eu trago", 35.06, False),
          (35.30, 36.50, "umas dicas", "como essa", 35.74, False)]
+FINAL = []
 def zoom_at(t):
     return 1.12 if 30.13 <= t < 32.75 else 1.0
 ANCHOR = (540, 700)
@@ -181,7 +182,7 @@ while True:
             place(cv, BTN[(k, active)], BX[k], BY, bs * ex_scale * (0.9 + 0.1 * ent), out * ent)
         lab = [l for l in LABELS if l[0] <= t + 1e-6][-1]
         la = smooth((t - lab[0]) / 0.12) * out
-        sz = fit_size(lab[1], SERIF, 84)
+        sz = fit_size(lab[1], SERIF, 72)
         draw_text(cv, lab[1], SERIF, sz, 540, 955, la, rise=int(10 * (1 - smooth((t - lab[0]) / 0.15))))
     for s, e, l1, l2, t2, big in FINAL:
         if s <= t < e:

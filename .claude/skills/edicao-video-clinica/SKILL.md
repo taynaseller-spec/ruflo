@@ -245,7 +245,7 @@ pequeno pulo **na palavra do veredito** e apaga quando o item seguinte entra (ca
 corte de take). Depois da lista, o painel sai e a legenda vira duas linhas: linha pequena em
 Montserrat SemiBold + linha grande em serifada (DM Serif Display); palavra do CTA bem grande.
 Script: `scripts/render_checklist.py <pasta>` (PIL quadro a quadro; edite ITEMS/LABELS/FINAL).
-Pedido da usuária: **sem título** e **legenda branca** (a referência usa dourado).
+Pedido da usuária: **sem título**, **legenda branca** (a referência usa dourado), fonte **Montserrat ExtraBold** (não serifada) e **sem legenda depois que as imagens acabam** (V2, 2026-11-23).
 
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
@@ -262,6 +262,7 @@ Pedido da usuária: **sem título** e **legenda branca** (a referência usa dour
 | 9 | 2026-11-12 | V2 do consórcio: ela trocou o B-roll de abertura (vídeo novo na pasta), pediu para começar já em meia tela, sem transição de entrada, e pediu "efeitos sonoros mais comuns" no lugar dos sons v2 (sintéticos/etéreos). | `cold_open` + `sfx_style: common` (seção 4f). Sons familiares (whoosh, swipe, pop, ding) em vez de designs elaborados. |
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
 | 11 | 2026-11-23 | Novo formato pedido (lista importante/não importante). Ela pediu igual à referência, mas sem título e com a legenda branca em vez de dourada. | Seção 4g. Legenda branca; dourado só na borda do cartão. Entregue sem efeitos sonoros (regra #10). |
+| 12 | 2026-11-23 | V1 do formato 4g usou serifada (DM Serif) como a referência e manteve legendas no final. | Ela pediu Montserrat e nenhuma legenda depois do painel. Mantenha Montserrat como fonte padrão mesmo quando a referência usar outra. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
