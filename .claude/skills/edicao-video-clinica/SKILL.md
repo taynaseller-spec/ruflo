@@ -235,6 +235,18 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
   a detecção falha (pessoa de costas). Confira sempre a folha de quadros: o detector errou num
   B-roll com a moça de costas para a câmera e cortou a cabeça.
 
+## 4g. Formato "IMPORTANTE × NÃO IMPORTANTE" (2026-11-23)
+
+Referência (pasta "Referência nova"): apresentadora em tela cheia o tempo todo; sobre o peito, um
+cartão com a foto do produto (borda dourada, cantos arredondados), legenda curta em serifada
+acima do cartão (nome do item, não o veredito) e dois botões embaixo: "IMPORTANTE" (check verde)
+e "NÃO IMPORTANTE" (X vermelho). O botão do veredito acende em degradê amarelo→laranja com um
+pequeno pulo **na palavra do veredito** e apaga quando o item seguinte entra (cada item entra num
+corte de take). Depois da lista, o painel sai e a legenda vira duas linhas: linha pequena em
+Montserrat SemiBold + linha grande em serifada (DM Serif Display); palavra do CTA bem grande.
+Script: `scripts/render_checklist.py <pasta>` (PIL quadro a quadro; edite ITEMS/LABELS/FINAL).
+Pedido da usuária: **sem título** e **legenda branca** (a referência usa dourado).
+
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
 | # | Data | Erro | Correção / regra permanente |
@@ -249,6 +261,7 @@ alta e dourada. `title_lines` e `name_card` são opcionais (sem nome informado �
 | 8 | 2026-11-12 | V1 do vídeo do consórcio (consultor de imóveis): limites dos segmentos 2–3 quadros fora dos cortes do vídeo cortado; as transições começavam num take e terminavam em outro ("ultrapassando outro take"). Ela também achou que havia meia tela e B-roll demais, pediu efeitos "mais bonitos" e transições mais sofisticadas, e pediu sem legenda e sem título. | Alinhar todo limite aos cortes de take (seção 4e). Em vídeo de ~40 s: ~2 meias telas + ~2 B-rolls em tela cheia, o resto com o apresentador e zooms. Sons v2 + `zoom_through`. |
 | 9 | 2026-11-12 | V2 do consórcio: ela trocou o B-roll de abertura (vídeo novo na pasta), pediu para começar já em meia tela, sem transição de entrada, e pediu "efeitos sonoros mais comuns" no lugar dos sons v2 (sintéticos/etéreos). | `cold_open` + `sfx_style: common` (seção 4f). Sons familiares (whoosh, swipe, pop, ding) em vez de designs elaborados. |
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
+| 11 | 2026-11-23 | Novo formato pedido (lista importante/não importante). Ela pediu igual à referência, mas sem título e com a legenda branca em vez de dourada. | Seção 4g. Legenda branca; dourado só na borda do cartão. Entregue sem efeitos sonoros (regra #10). |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
