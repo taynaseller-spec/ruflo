@@ -246,6 +246,9 @@ corte de take). Depois da lista, o painel sai e a legenda vira duas linhas: linh
 Montserrat SemiBold + linha grande em serifada (DM Serif Display); palavra do CTA bem grande.
 Script: `scripts/render_checklist.py <pasta>` (PIL quadro a quadro; edite ITEMS/LABELS/FINAL).
 Pedido da usuária: **sem título**, **legenda branca** (a referência usa dourado), fonte **Montserrat ExtraBold** (não serifada) e **sem legenda depois que as imagens acabam** (V2, 2026-11-23).
+Efeitos (V3, pedidos por ela, estilo common): `whoosh_c` -10 em cada troca de cartão (0,2 s antes),
+`ding_c` -15 quando acende IMPORTANTE, `pop_c` -12 quando acende NÃO IMPORTANTE, `swipe_c` -14 na saída
+do painel e -15 no zoom. Gerados com `sfx.py` e mixados sobre o vídeo já renderizado.
 
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
