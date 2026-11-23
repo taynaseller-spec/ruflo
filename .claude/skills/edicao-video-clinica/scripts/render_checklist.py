@@ -87,11 +87,14 @@ def _circle(s):
     m = Image.new("L", (s * 4, s * 4), 0); ImageDraw.Draw(m).ellipse([0, 0, s * 4 - 1, s * 4 - 1], fill=255)
     return m.resize((s, s), Image.LANCZOS)
 
-BTN = {(k, a): button(l, k, a) for k, l in [("ok", "IMPORTANTE"), ("no", "NÃO IMPORTANTE")] for a in (False, True)}
-BX = {"ok": 125, "no": 565}; BY = 1335
+K = 0.8
+def _sc(ip):
+    im, pad = ip; return im.resize((round(im.width * K), round(im.height * K)), Image.LANCZOS), round(pad * K)
+BTN = {(k, a): _sc(button(l, k, a)) for k, l in [("ok", "IMPORTANTE"), ("no", "NÃO IMPORTANTE")] for a in (False, True)}
+BX = {"ok": 208, "no": 560}; BY = 1355
 
 # ---------- card
-CX, CY, CW, CH, BORD = 200, 985, 680, 324, 6
+CX, CY, CW, CH, BORD = 268, 1075, 544, 260, 5
 frame_gold = grad(CW, CH, (176, 128, 44), (246, 216, 128))
 fg2 = grad(CW, CH, (246, 216, 128), (168, 118, 38), diag=False)
 gold = Image.blend(frame_gold, fg2, 0.4)
@@ -182,8 +185,8 @@ while True:
             place(cv, BTN[(k, active)], BX[k], BY, bs * ex_scale * (0.9 + 0.1 * ent), out * ent)
         lab = [l for l in LABELS if l[0] <= t + 1e-6][-1]
         la = smooth((t - lab[0]) / 0.12) * out
-        sz = fit_size(lab[1], SERIF, 72)
-        draw_text(cv, lab[1], SERIF, sz, 540, 955, la, rise=int(10 * (1 - smooth((t - lab[0]) / 0.15))))
+        sz = fit_size(lab[1], SERIF, 60)
+        draw_text(cv, lab[1], SERIF, sz, 540, 1050, la, rise=int(10 * (1 - smooth((t - lab[0]) / 0.15))))
     for s, e, l1, l2, t2, big in FINAL:
         if s <= t < e:
             a = smooth((t - s) / 0.1) * smooth((e - t) / 0.06 if e < 36.4 else 1)

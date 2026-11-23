@@ -249,6 +249,9 @@ Pedido da usuária: **sem título**, **legenda branca** (a referência usa doura
 Efeitos (V3, pedidos por ela, estilo common): `whoosh_c` -10 em cada troca de cartão (0,2 s antes),
 `ding_c` -15 quando acende IMPORTANTE, `pop_c` -12 quando acende NÃO IMPORTANTE, `swipe_c` -14 na saída
 do painel e -15 no zoom. Gerados com `sfx.py` e mixados sobre o vídeo já renderizado.
+Tamanho aprovado (V5): painel em 80% do tamanho da referência e mais para baixo (legenda em y≈1050,
+cartão de 544x260 em y=1075, botões em y=1355). Com o tamanho da referência ficou "muito perto do rosto".
+Deixe ≥150 px entre o queixo e o topo da legenda.
 
 ## 5. Registro de aprendizados (erros e correções da usuária)
 
