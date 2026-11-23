@@ -266,6 +266,7 @@ do painel e -15 no zoom. Gerados com `sfx.py` e mixados sobre o vídeo já rende
 | 10 | 2026-11-12 | Na V3 do consórcio, depois de testar sons v2 e common, ela pediu para tirar todos os efeitos sonoros. | `"sfx": false` no project.json = só a voz. Para esta usuária, nos próximos vídeos, pergunte se ela quer efeitos sonoros antes de colocá-los (ou entregue sem e ofereça). |
 | 11 | 2026-11-23 | Novo formato pedido (lista importante/não importante). Ela pediu igual à referência, mas sem título e com a legenda branca em vez de dourada. | Seção 4g. Legenda branca; dourado só na borda do cartão. Entregue sem efeitos sonoros (regra #10). |
 | 12 | 2026-11-23 | V1 do formato 4g usou serifada (DM Serif) como a referência e manteve legendas no final. | Ela pediu Montserrat e nenhuma legenda depois do painel. Mantenha Montserrat como fonte padrão mesmo quando a referência usar outra. |
+| 13 | 2026-11-23 | Troquei as fotos: pus o conta-gotas em "vitamina C" e o tubo The Ordinary em "retinol", e ela corrigiu (é o contrário). | Não adivinhe qual produto é qual pela aparência. Se a pasta não deixar claro, pergunte ou destaque a escolha na entrega. Aqui: tubo The Ordinary = vitamina C; conta-gotas = retinol. |
 
 ## 6. Pipeline (scripts em `scripts/`)
 
